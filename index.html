@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="description" content="Timer with natural sounds">
-    <meta name="keywords" content="timer, natural sounds">
+    <meta name="keywords" content="timer, natural sounds, meditation, meditation timer">
     <meta name="author" content="Jaroslav Nahodil">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Timer</title>
@@ -11,8 +11,8 @@
 <body>
     <main id="content" role="main">
         
-        <section class="timer">   
-        
+        <section class="timer">
+
             <h1 class="d-n">Timer</h1>
 
             <div class="timer-time">
@@ -30,9 +30,9 @@
             </div>
     
             <div class="btn-group">
-                <button class="btn btn-reset" id="btn-reset" type="reset">RESET</button>
-                <button class="btn btn-start" id="btn-startOrPause">START</button>
-                <button class="btn btn-edit" id="btn-edit">EDIT</button>
+                <button class="btn btn--edit" id="btn-edit">EDIT</button>
+                <button class="btn btn--start-pause" id="btn-start-pause">START</button>
+                <button class="btn btn--reset" id="btn-reset">RESET</button>
             </div>
 
             <div class="modal modal--edit">
@@ -45,6 +45,7 @@
                         <button class="btn" id="hours-increment">+</button>
                         <input type="number"
                                name="hours"
+                               class="modal__hours-edit"
                                min="0"
                                max="23"
                                value="00"
@@ -60,6 +61,7 @@
                         <button class="btn" id="minutes-increment">+</button>
                         <input type="number"
                                name="minutes"
+                               class="modal__minutes-edit"
                                min="0"
                                max="59"
                                value="00"
@@ -75,6 +77,7 @@
                         <button class="btn" id="seconds-increment">+</button>
                         <input type="number"
                                name="seconds"
+                               class="modal__seconds-edit"
                                min="0"
                                max="59"
                                value="0"
@@ -94,13 +97,13 @@
                         <option value="Default Sound">Default Sound</option>
                     </select>    
         
-                    <button class="btn btn--play" id="btn-playSound">
+                    <button class="btn btn--play" id="btn-play-sound">
     
                     </button>
         
-                    <input type="file" name="importSound" class="btn btn--file" id="btn-importSound">
+                    <input type="file" name="import-sound" class="btn btn--file" id="btn-import-sound">
     
-                    <input type="checkbox" name="repeat-sound" id="checkboxRepeatSound"> Repeat sound
+                    <input type="checkbox" name="repeat-sound" id="checkbox-repeat-sound"> Repeat sound
                 </div>
 
             </div>
@@ -108,8 +111,6 @@
         </section>
 
     </main>
-
-    <div></div>
 
 </body>
 </html>
