@@ -1,0 +1,34 @@
+{
+  "name": "timer",
+  "version": "1.0.0",
+  "description": "Timer with natural sounds for meditating",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "sass": "gulp sass",
+    "clean": "gulp clean",
+    "watch:sass": "gulp watch:sass"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lattor/Timer.git"
+  },
+  "keywords": [
+    "timer",
+    "time",
+    "meditation"
+  ],
+  "author": "Jaroslav Nahodil",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/lattor/Timer/issues"
+  },
+  "homepage": "https://github.com/lattor/Timer#readme",
+  "devDependencies": {
+    "del": "^6.0.0",
+    "gulp": "^4.0.2",
+    "gulp-concat": "^2.6.1",
+    "gulp-sass": "^4.1.0",
+    "node-sass": "^4.14.1"
+  }
+}
