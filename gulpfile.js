@@ -1,27 +1,67 @@
 'use strict';
 
-const gulp = require('gulp');
-const sass = require('gulp-sass');
-const del = require('del');
-const concat = require('gulp-concat');
+const gulp       = require('gulp'),
+      sass       = require('gulp-sass'),
+      rename     = require('gulp-rename'),
+      cssmin     = require('gulp-cssnano'),
+      concat     = require('gulp-concat'),
+      prefix     = require('gulp-autoprefixer'),      
+      sourcemaps = require('gulp-sourcemaps'),
+      plumber    = require('gulp-plumber'),      
+      notify     = require('gulp-notify'),      
+      del        = require('del')
 
-gulp.task('sass', () => {
-    return gulp.src('./sass/_main.scss')
+
+const onError = (err) => {
+  notify.onError({
+    title:    "Gulp",
+    subtitle: "Failure!",
+    message:  "Error: <%= error.message %>",
+    sound:    "Basso"
+  })(err);
+  this.emit('end');
+};
+
+const sassOptions = {
+  outputStyle: 'expanded'
+};
+
+/**
+ * BUILD SUBTASKS
+ * --------------
+ */
+
+gulp.task('styles', () => {
+  return gulp.src('./sass/_main.scss')
+    .pipe(plumber({errorHandler: onError}))
+    .pipe(sourcemaps.init())
     .pipe(concat('styles.scss'))
-    .pipe(sass().on('error', sass.logError))
+    .pipe(sass(sassOptions).on('error', sass.logError))
+    .pipe(prefix())
+    .pipe(rename('styles.css'))
+    .pipe(cssmin())
+    .pipe(rename({ suffix: '.min' }))
+    .pipe(sourcemaps.write())
     .pipe(gulp.dest('./dist/css'))
 });
 
 gulp.task('clean', () => {
     return del([
-        './dist/css/styles.css',
+        './dist/css/*.css'
     ]);
 });
 
-gulp.task('watch:sass', () => {
+gulp.task('watch', () => {
     gulp.watch('./sass/**/*.scss', (done) => {
-        gulp.series(['clean', 'sass'])(done);
+        gulp.series(['clean', 'styles'])(done);
     });
 });
 
-gulp.task('default', gulp.series(['watch:sass']));
+/**
+ * BUILD TASKS
+ * ------------
+ */
+
+gulp.task('default', gulp.series(['watch']));
+
+gulp.task('build', gulp.series(['clean', 'styles']));
