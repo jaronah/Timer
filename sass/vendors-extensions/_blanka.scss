@@ -1,0 +1,36 @@
+body {
+    padding: 0;
+    margin: 0;
+}
+
+main {
+    @extend %document-padding;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    margin: 0;
+}
+
+/*
+Block elements set to border-box box-sizing:
+--------------------------------------------
+*/
+address, article, aside, blockquote,
+canvas, dd, div, dl, dt, fieldset,
+figcaption, figure, footer, form,
+h1, h2, h3, h4, h5, h6,
+header, hr, li, main, nav, noscript,
+ol, p, picture, pre, section, table,
+tfoot, ul, video {
+    box-sizing: border-box;
+}
+
+input[type='number']::-webkit-inner-spin-button, 
+input[type='number']::-webkit-outer-spin-button { 
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input {
+    text-align: center;
+}

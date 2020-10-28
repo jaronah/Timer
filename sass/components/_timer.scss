@@ -1,0 +1,26 @@
+.timer {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    
+    height: 67.5vh;
+    // border: 1px solid silver;
+
+    .content {
+        // border: 1px solid orange;
+    }
+
+    &-time {
+        text-align: center;
+        font-size: 2.75rem;
+        // border: 1px solid silver;
+
+        @media (min-width: $media-breakpoint-mobil) {
+            font-size: 16vw;
+        }
+
+        @media (min-width: $media-breakpoint-tablet) {
+            font-size: 8.5rem;
+        }
+    }
+}
