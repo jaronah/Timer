@@ -7,6 +7,7 @@
 @import 'vendors/blanka';
 @import 'vendors-extensions/blanka';
 
+@import 'base/base';
 @import 'base/typography';
 @import 'base/helpers';
 
@@ -14,6 +15,7 @@
 @import 'layout/header';
 @import 'layout/footer';
 
+@import 'components/icons';
 @import 'components/buttons';
 @import 'components/modal';
 @import 'components/timer';

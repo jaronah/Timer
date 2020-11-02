@@ -1,0 +1,73 @@
+.title {
+    display: flex;
+
+    &--small {
+        margin-bottom: 0.25rem;
+    }
+}
+
+.checkbox {
+    display: inline-grid;
+    grid-template-columns: min-content auto;
+    grid-gap: 0.5em;
+    color: $color-orange;
+
+    &__input input:checked
+    + &__control svg {
+        transform: scale(1);
+    }
+
+    &__input input:focus
+    + &__control {
+        box-shadow: 0 0 0 0.05em $color-light, 0 0 0.3em 0 $color-orange;
+    }
+
+    &__input input:disabled
+    + &__control {
+        border-color: $color-dark-3;
+    }
+
+    &--disabled {
+        color: $color-dark-3;
+    }
+
+    &__input {
+        display: grid;
+        grid-template-areas: "checkbox";
+        align-items: center;
+
+        input {
+            opacity: 0;
+            width: 1em;
+            height: 1em;
+        }
+
+        > * {
+            grid-area: checkbox;
+        }
+    }
+
+    &__control {
+        display: inline-grid;
+        justify-content: center;
+        align-items: center;
+        width: 1em;
+        height: 1em;
+        padding: 0.05em;
+        border-radius: 0.25em;
+        border: 0.1em solid $color-orange;
+        cursor: pointer;
+
+        svg {
+            transition: transform 0.1s ease-in 25ms;
+            transform: scale(0);
+            transform-origin: bottom left;
+        }
+    }
+
+    &__label {
+        display: inline-grid;
+        align-items: center;
+    }
+
+}

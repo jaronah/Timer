@@ -25,12 +25,42 @@ tfoot, ul, video {
     box-sizing: border-box;
 }
 
-input[type='number']::-webkit-inner-spin-button, 
-input[type='number']::-webkit-outer-spin-button { 
-    -webkit-appearance: none;
-    margin: 0;
+label {
+    user-select: none;
+    cursor: pointer;
 }
 
 input {
+    min-height: 2rem;
+
+    &[type="checkbox"] {
+        background-color: $color-orange;
+    }
+
+    &[type='number']::-webkit-inner-spin-button, 
+    &[type='number']::-webkit-outer-spin-button { 
+        -webkit-appearance: none;
+        margin: 0;
+    }
+
+}
+
+input[type="number"],
+input[type="text"],
+select {
+    box-sizing: border-box;
     text-align: center;
+    color: $color-dark-2;
+    border: none;
+    outline: none;
+    z-index: 1000;
+
+    &:active, &:focus {
+        outline: 2px solid $color-orange;
+        
+    }
+}
+
+select {
+    margin-bottom: 0;
 }
