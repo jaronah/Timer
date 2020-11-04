@@ -37,11 +37,11 @@ input {
         background-color: $color-orange;
     }
 
-    &[type='number']::-webkit-inner-spin-button, 
-    &[type='number']::-webkit-outer-spin-button { 
-        -webkit-appearance: none;
-        margin: 0;
-    }
+    // &[type='number']::-webkit-inner-spin-button, 
+    // &[type='number']::-webkit-outer-spin-button { 
+    //     -webkit-appearance: none;
+    //     margin: 0;
+    // }
 
 }
 
