@@ -1,0 +1,36 @@
+/*
+COLORS:
+--------
+*/
+$color-dark-0: #333;
+$color-dark-1: #383838;
+$color-dark-2: #484848;
+$color-dark-3: #686868;
+$color-light: #eee;
+$color-green: #47d147;
+$color-green-active: #2bee2b;
+$color-orange: #d1af47;
+$color-orange-active: #eebd2b;
+$color-red: #d14747;
+$color-red-active: #ee2b2b;
+$color-silver: #879287;
+$color-silver-active: #afb6af;
+
+
+$color-primary: $color-dark-0;
+$color-secondary: $color-orange;
+
+/*
+HEIGHTS:
+--------
+*/
+$header-height: 10rem;
+
+/*
+BREAKPOINTS:
+------------
+*/
+$media-breakpoint-mobil: 320px;
+$media-breakpoint-tablet: 768px;
+$media-breakpoint-desktop: 992px;
+$media-breakpoint-large: 1200px;

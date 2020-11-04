@@ -1,0 +1,123 @@
+$breakpoint-btn-in-row: 400px;
+
+.btn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-width: 2rem;
+    min-height: 1.8rem;
+    color: $color-light;
+    background-color: $color-dark-2;
+    border: 1px solid $color-silver;
+    outline: none;
+    user-select: none;
+    cursor: pointer;
+
+    &:hover {
+        background-color: $color-dark-3;
+    }
+
+    &:active {
+        color: #fff;
+        border-color: #fff;
+    }
+
+    &--round {
+        width: 5.3rem;
+        height: 5.3rem;    
+        margin-bottom: 1rem;    
+        border: 3px solid;
+        border-radius: 50%;
+        outline: none;
+        color: $color-light;
+        background-color: transparent;
+        
+        @media (min-width: $breakpoint-btn-in-row) {
+            margin-bottom: 0;
+        }
+    
+        @media (min-width: $media-breakpoint-tablet) {
+            width: 6rem;
+            height: 6rem;
+        }
+    }
+
+    &--start-pause {
+        color: $color-green;
+        border-color: $color-green;
+
+        &:active {
+            color: $color-green-active;
+            border-color: $color-green-active;
+        }
+    }
+
+    &--edit {
+        color: $color-orange;
+        border-color: $color-orange;
+
+        &:active {
+            color: $color-orange-active;
+            border-color: $color-orange-active;
+        }
+    }
+
+    &--reset {
+        color: $color-silver;
+        border-color: $color-silver;
+
+        &:active {
+            color: $color-silver-active;
+            border-color: $color-silver-active;
+        }
+    }
+
+    &--play {
+        padding: 0.5rem;
+
+        svg path {
+            fill: $color-green;
+        }
+    }
+
+    &--file {
+    }
+
+    &--cancel {
+        background-color: transparent;
+        border: none;
+        outline: none;
+
+        &:hover {
+            background-color: transparent;
+
+            svg path {
+                fill: $color-red;
+            }
+        }
+
+        &:active {
+            svg path {
+                fill: $color-red-active;
+            }
+        }
+    }
+
+    &-group {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-between;
+        margin: auto;
+        margin-top: 5vh;
+
+        max-width: 25rem;
+
+        @media (min-width: $breakpoint-btn-in-row) {
+            flex-direction: row;
+            margin-top: 2.25vh;
+        }
+    }
+
+
+}

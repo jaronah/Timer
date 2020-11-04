@@ -6,111 +6,153 @@
     <meta name="keywords" content="timer, natural sounds, meditation, meditation timer">
     <meta name="author" content="Jaroslav Nahodil">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="dist/css/styles.min.css">
     <title>Timer</title>
 </head>
 <body>
+
+    <header class="header">
+        <h1 class="header__title">timer</h1>
+    </header>
+
     <main id="content" role="main">
-        
+
         <section class="timer">
 
-            <h1 class="d-n">Timer</h1>
-
-            <div class="timer-time">
-                <span class="timer-time__hours">
-                    00
-                </span>
-                <span class="timer-time__colon"> : </span>
-                <span class="timer-time__minutes">
-                    00
-                </span>
-                <span class="timer-time__colon"> : </span>
-                <span class="timer-time__seconds">
-                    00
-                </span>
-            </div>
+            <div class="content">
+                <div class="timer-time">
+                    <span class="timer-time__hours">
+                        00
+                    </span>
+                    <span class="timer-time__colon"> : </span>
+                    <span class="timer-time__minutes">
+                        00
+                    </span>
+                    <span class="timer-time__colon"> : </span>
+                    <span class="timer-time__seconds">
+                        00
+                    </span>
+                </div>
+        
+                <div class="btn-group">
+                    <button class="btn btn--round btn--edit" id="btn-edit">EDIT</button>
+                    <button class="btn btn--round btn--start-pause" id="btn-start-pause">START</button>
+                    <button class="btn btn--round btn--reset" id="btn-reset">RESET</button>
+                </div>
     
-            <div class="btn-group">
-                <button class="btn btn--edit" id="btn-edit">EDIT</button>
-                <button class="btn btn--start-pause" id="btn-start-pause">START</button>
-                <button class="btn btn--reset" id="btn-reset">RESET</button>
-            </div>
-
-            <div class="modal modal--edit">
-                
-                <h2>Edit timer</h2>
-
-                <div class="modal--edit__timeset">
-                    <div class="modal--edit__timeset-hours">
-                        <span>hours</span>
-                        <button class="btn" id="hours-increment">+</button>
-                        <input type="number"
-                               name="hours"
-                               class="modal__hours-edit"
-                               min="0"
-                               max="23"
-                               value="00"
-                               onchange="leadingZeros(this)"
-                               onkeyup="leadingZeros(this)"
-                               onkeydown="leadingZeros(this)"
-                               onclick="leadingZeros(this)">
-                        <button class="btn" id="hours-decrement">-</button>
-                    </div>
-
-                    <div class="modal--edit__timeset-minutes">
-                        <span>minutes</span>
-                        <button class="btn" id="minutes-increment">+</button>
-                        <input type="number"
-                               name="minutes"
-                               class="modal__minutes-edit"
-                               min="0"
-                               max="59"
-                               value="00"
-                               onchange="leadingZeros(this)"
-                               onkeyup="leadingZeros(this)"
-                               onkeydown="leadingZeros(this)"
-                               onclick="leadingZeros(this)">
-                        <button class="btn" id="minutes-decrement">-</button>
-                    </div>
-
-                    <div class="modal--edit__timeset-seconds">
-                        <span>seconds</span>
-                        <button class="btn" id="seconds-increment">+</button>
-                        <input type="number"
-                               name="seconds"
-                               class="modal__seconds-edit"
-                               min="0"
-                               max="59"
-                               value="0"
-                               onchange="leadingZeros(this)"
-                               onkeyup="leadingZeros(this)"
-                               onkeydown="leadingZeros(this)"
-                               onclick="leadingZeros(this)">
-                        <button class="btn" id="seconds-decrement">-</button>
+                <div class="modal-wrapper d-n">
+                    <div class="modal modal--edit">
+                    
+                        <div class="row f-sb mb-2">
+                            <strong class="modal__title">Edit timer</strong>
+                            <button class="btn btn--cancel">
+                                <svg class="icon" viewBox="0 0 4.2333 4.2333" xmlns="http://www.w3.org/2000/svg">
+                                    <path transform="scale(.26458)" d="m1.7773 0-1.7773 1.7773 6.2227 6.2227-6.2227 6.2227 1.7773 1.7773 6.2227-6.2227 6.2227 6.2227 1.7773-1.7773-6.2227-6.2227 6.2227-6.2227-1.7773-1.7773-6.2227 6.2227-6.2227-6.2227z" fill="#d1af47" stroke-width="0"/>
+                                </svg>
+                            </button>                            
+                        </div>
+        
+                        <div class="modal--edit__timeset">
+                            <div class="col mr-1-5">
+                                <span class="title title--small">hours</span>
+                                <button class="btn font-larger" id="hours-increment">+</button>
+                                <input type="number"
+                                       name="hours"
+                                       class="modal__hours-edit font-larger"
+                                       min="0"
+                                       max="23"
+                                       value="00"
+                                       onchange="leadingZeros(this)"
+                                       onkeyup="leadingZeros(this)"
+                                       onkeydown="leadingZeros(this)"
+                                       onclick="leadingZeros(this)">
+                                <button class="btn font-larger" id="hours-decrement">-</button>
+                            </div>
+        
+                            <div class="col mr-1-5">
+                                <span class="title title--small">minutes</span>
+                                <button class="btn font-larger" id="minutes-increment">+</button>
+                                <input type="number"
+                                       name="minutes"
+                                       class="modal__minutes-edit font-larger"
+                                       min="0"
+                                       max="59"
+                                       value="00"
+                                       onchange="leadingZeros(this)"
+                                       onkeyup="leadingZeros(this)"
+                                       onkeydown="leadingZeros(this)"
+                                       onclick="leadingZeros(this)">
+                                <button class="btn font-larger" id="minutes-decrement">-</button>
+                            </div>
+        
+                            <div class="col">
+                                <span class="title title--small">seconds</span>
+                                <button class="btn font-larger" id="seconds-increment">+</button>
+                                <input type="number"
+                                       name="seconds"
+                                       class="modal__seconds-edit font-larger"
+                                       min="0"
+                                       max="59"
+                                       value="00"
+                                       onchange="leadingZeros(this)"
+                                       onkeyup="leadingZeros(this)"
+                                       onkeydown="leadingZeros(this)"
+                                       onclick="leadingZeros(this)">
+                                <button class="btn font-larger" id="seconds-decrement">-</button>
+                            </div>
+                        </div>
+        
+                        
+                        <span class="title title--small">Sound</span>
+                        
+                        <div class="modal--edit__sound">
+                            <div class="row mb-0-5">
+                                <select name="sounds" id="select-sound">
+                                    <option value="Default Sound">Default Sound</option>
+                                </select>    
+                    
+                                <button class="btn btn--play mr-0-5" id="btn-play-sound">
+                                    <svg class="icon" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" xmlns:cc="http://creativecommons.org/ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+                                        <path d="m0 0 16 8-16 8z" fill="#d1af47" fill-rule="evenodd"/>
+                                    </svg>
+                                    <svg class="icon d-n" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" xmlns:cc="http://creativecommons.org/ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+                                        <g fill="#d1af47" stroke-width="0">
+                                            <rect x="1" width="6" height="16" rx="0" ry="3"/>
+                                            <rect x="9" width="6" height="16" rx="0" ry="3"/>
+                                        </g>
+                                    </svg>
+                                </button>
+    
+                                <button class="btn btn--file" id="btn-import-sound">
+                                    browse
+                                </button>
+                            </div>
+                            
+                            <label class="checkbox">
+                                <span class="checkbox__input">
+                                    <input type="checkbox" name="checkbox" id="checkbox-repeat-sound">
+                                    <span class="checkbox__control">
+                                        <svg width="20px" height="20px" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+                                            <g transform="matrix(.5713 .5713 -.5713 .5713 8.0018 -3.1472)" fill="#d1af47" shape-rendering="auto">
+                                                <path d="m3 13h7v-13h3v16h-10z" color="#000000" color-rendering="auto" dominant-baseline="auto" image-rendering="auto" solid-color="#000000" stop-color="#000000" style="font-feature-settings:normal;font-variant-alternates:normal;font-variant-caps:normal;font-variant-east-asian:normal;font-variant-ligatures:normal;font-variant-numeric:normal;font-variant-position:normal;font-variation-settings:normal;inline-size:0;isolation:auto;mix-blend-mode:normal;shape-margin:0;shape-padding:0;text-decoration-color:#000000;text-decoration-line:none;text-decoration-style:solid;text-indent:0;text-orientation:mixed;text-transform:none;white-space:normal"/>
+                                                <path d="m9.5-0.5v13h-7v4h11v-17zm1 1h2v15h-9v-2h7z" color="#000000" color-rendering="auto" dominant-baseline="auto" image-rendering="auto" solid-color="#000000" stop-color="#000000" style="font-feature-settings:normal;font-variant-alternates:normal;font-variant-caps:normal;font-variant-east-asian:normal;font-variant-ligatures:normal;font-variant-numeric:normal;font-variant-position:normal;font-variation-settings:normal;inline-size:0;isolation:auto;mix-blend-mode:normal;shape-margin:0;shape-padding:0;text-decoration-color:#000000;text-decoration-line:none;text-decoration-style:solid;text-indent:0;text-orientation:mixed;text-transform:none;white-space:normal"/>
+                                            </g>
+                                        </svg>
+                                    </span>
+                                </span>                                
+                                <span class="checkbox__label">Repeat sound</span>
+                            </label>
+                        </div>
+        
                     </div>
                 </div>
-
-                
-                <span>Sound</span>
-                
-                <div class="modal--edit__sound">
-                    <select name="sounds" id="select-sound">
-                        <option value="Default Sound">Default Sound</option>
-                    </select>    
-        
-                    <button class="btn btn--play" id="btn-play-sound">
-    
-                    </button>
-        
-                    <input type="file" name="import-sound" class="btn btn--file" id="btn-import-sound">
-    
-                    <span class="wrapper"><input type="checkbox" name="repeat-sound" id="checkbox-repeat-sound"> Repeat sound</span>
-                </div>
-
             </div>
 
         </section>
 
     </main>
 
+    <script src="./js/functions.js"></script>
+    <script src="./js/btn_handler.js"></script>
 </body>
 </html>
