@@ -21,31 +21,31 @@
 
             <div class="content">
                 <div class="timer-time">
-                    <span class="timer-time__hours">
+                    <span class="timer-time__hours" id="timerHours">
                         00
                     </span>
                     <span class="timer-time__colon"> : </span>
-                    <span class="timer-time__minutes">
+                    <span class="timer-time__minutes" id="timerMinutes">
                         00
                     </span>
                     <span class="timer-time__colon"> : </span>
-                    <span class="timer-time__seconds">
+                    <span class="timer-time__seconds" id="timerSeconds">
                         00
                     </span>
                 </div>
         
                 <div class="btn-group">
-                    <button class="btn btn--round btn--edit" id="btn-edit">EDIT</button>
+                    <button class="btn btn--round btn--edit" id="btnEdit">EDIT</button>
                     <button class="btn btn--round btn--start-pause" id="btn-start-pause">START</button>
                     <button class="btn btn--round btn--reset" id="btn-reset">RESET</button>
                 </div>
     
-                <div class="modal-wrapper d-n">
+                <div class="modal-wrapper d-n" id="modalEditTimer" status="close">
                     <div class="modal modal--edit">
                     
                         <div class="row f-sb mb-2">
                             <strong class="modal__title">Edit timer</strong>
-                            <button class="btn btn--cancel">
+                            <button class="btn btn--cancel" id="btnCancelModalEditTimer">
                                 <svg class="icon" viewBox="0 0 4.2333 4.2333" xmlns="http://www.w3.org/2000/svg">
                                     <path transform="scale(.26458)" d="m1.7773 0-1.7773 1.7773 6.2227 6.2227-6.2227 6.2227 1.7773 1.7773 6.2227-6.2227 6.2227 6.2227 1.7773-1.7773-6.2227-6.2227 6.2227-6.2227-1.7773-1.7773-6.2227 6.2227-6.2227-6.2227z" fill="#d1af47" stroke-width="0"/>
                                 </svg>
@@ -143,7 +143,15 @@
                                 <span class="checkbox__label">Repeat sound</span>
                             </label>
                         </div>
-        
+                        
+                        <div class="row f-sb mt-2">
+                            <button class="btn" id="btnStornoModalEditTimer">Storno</button>
+                            <button class="btn" id="btnSaveModalEditTimer">Save</button>                           
+                        </div>
+
+                    </div>
+
+                    <div class="modal-closable-area" id="closableAreaOfEditTimer">
                     </div>
                 </div>
             </div>
@@ -153,6 +161,6 @@
     </main>
 
     <script src="./js/functions.js"></script>
-    <script src="./js/btn_handler.js"></script>
+    <script src="./js/timer.js"></script>
 </body>
 </html>

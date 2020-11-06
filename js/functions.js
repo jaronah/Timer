@@ -14,17 +14,28 @@ const leadingZeros = (obj) => {
 }
 
 /**
+ * Open or Close Modal Window
+ * ---------------------------
+ * uses attribute 'status' with possible values: 'open' or 'close'
  * 
- * @param {*} what to close 
+ * @param {HTMLDivElement} obj object to open or close 
  */
-const closeModal = (what) => {
-    if (what != undefined || what != null) {
-        what.classList.add('d-n');
+const openOrCloseModal = (obj) => {
+    
+    if (obj != undefined || obj != null) {
+
+        if (obj.getAttribute('status') == 'close') {
+        
+            obj.setAttribute('status', 'open');
+            obj.classList.remove('d-n');
+        
+        } else if (obj.getAttribute('status') == 'open') {
+        
+            obj.setAttribute('status', 'close');
+            obj.classList.add('d-n');
+        
+        }
+        
     }
-}
 
-const openEditTimer = () => {
-    const modalEdit = document.querySelector('.modal--edit').parentElement;
-
-    modalEdit.classList.remove('d-n');
 }
