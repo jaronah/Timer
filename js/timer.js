@@ -11,6 +11,7 @@ const hoursMax = 99;
  * Variables for main page:
  * ------------------------
  */
+const htmlTimerTime = document.getElementById('timerTime');
 const htmlTimerSeconds = document.getElementById('timerSeconds');
 const htmlTimerMinutes = document.getElementById('timerMinutes');
 const htmlTimerHours = document.getElementById('timerHours');
@@ -181,6 +182,7 @@ const timerCountdown = (ev) => {
             btnStartOrPause.disabled = true;
             btnReset.disabled = false;
             btnEdit.disabled = false;
+            htmlTimerTime.classList.add('disabled');
             htmlTimerMessage.innerText = 'Timeout has left.';
         
         }
@@ -207,6 +209,12 @@ const insertTimeoutIntoHtml = () => {
 
     status = insertTimeoutIntoHtmlForTimer();
     insertTimeoutIntoHtmlForModal();
+
+    if (getTimerCurrentTime() === 0) {
+        htmlTimerTime.classList.add('disabled');
+    } else {
+        htmlTimerTime.classList.remove('disabled');
+    }
 
     clearMessage(htmlTimerMessage);
 
