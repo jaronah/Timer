@@ -15,6 +15,8 @@ const htmlTimerSeconds = document.getElementById('timerSeconds');
 const htmlTimerMinutes = document.getElementById('timerMinutes');
 const htmlTimerHours = document.getElementById('timerHours');
 
+const htmlTimerMessage = document.getElementById('timerMessage');
+
 const btnEdit = document.getElementById('btnEdit');
 const btnStartOrPause = document.getElementById('btnStartOrPause');
 const btnReset = document.getElementById('btnReset');
@@ -179,6 +181,7 @@ const timerCountdown = (ev) => {
             btnStartOrPause.disabled = true;
             btnReset.disabled = false;
             btnEdit.disabled = false;
+            htmlTimerMessage.innerText = 'Timeout has left.';
         
         }
 
@@ -204,6 +207,8 @@ const insertTimeoutIntoHtml = () => {
 
     status = insertTimeoutIntoHtmlForTimer();
     insertTimeoutIntoHtmlForModal();
+
+    clearMessage(htmlTimerMessage);
 
     return status;
 
