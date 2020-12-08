@@ -36,8 +36,8 @@
         
                 <div class="btn-group">
                     <button class="btn btn--round btn--edit" id="btnEdit">EDIT</button>
-                    <button class="btn btn--round btn--start-pause" id="btn-start-pause">START</button>
-                    <button class="btn btn--round btn--reset" id="btn-reset">RESET</button>
+                    <button class="btn btn--round btn--start-pause isPaused" id="btnStartOrPause">START</button>
+                    <button class="btn btn--round btn--reset" id="btnReset">RESET</button>
                 </div>
     
                 <div class="modal-wrapper d-n" id="modalEditTimer" status="close">
@@ -58,9 +58,10 @@
                                 <button class="btn font-larger" id="hours-increment">+</button>
                                 <input type="number"
                                        name="hours"
-                                       class="modal__hours-edit font-larger"
+                                       class="modal__hours font-larger"
+                                       id="modalHours"
                                        min="0"
-                                       max="23"
+                                       max="99"
                                        value="00"
                                        onchange="leadingZeros(this)"
                                        onkeyup="leadingZeros(this)"
@@ -74,7 +75,8 @@
                                 <button class="btn font-larger" id="minutes-increment">+</button>
                                 <input type="number"
                                        name="minutes"
-                                       class="modal__minutes-edit font-larger"
+                                       class="modal__minutes font-larger"
+                                       id="modalMinutes"
                                        min="0"
                                        max="59"
                                        value="00"
@@ -90,7 +92,8 @@
                                 <button class="btn font-larger" id="seconds-increment">+</button>
                                 <input type="number"
                                        name="seconds"
-                                       class="modal__seconds-edit font-larger"
+                                       class="modal__seconds font-larger"
+                                       id="modalSeconds"
                                        min="0"
                                        max="59"
                                        value="00"
@@ -107,11 +110,11 @@
                         
                         <div class="modal--edit__sound">
                             <div class="row mb-0-5">
-                                <select name="sounds" id="select-sound">
-                                    <option value="Default Sound">Default Sound</option>
+                                <select name="sounds" id="modalSelectAlarm">
+                                    <option value="iron" selected>iron</option>
                                 </select>    
                     
-                                <button class="btn btn--play mr-0-5" id="btn-play-sound">
+                                <button class="btn btn--play mr-0-5" id="btnPlayAlarm">
                                     <svg class="icon" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" xmlns:cc="http://creativecommons.org/ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
                                         <path d="m0 0 16 8-16 8z" fill="#d1af47" fill-rule="evenodd"/>
                                     </svg>
@@ -123,9 +126,7 @@
                                     </svg>
                                 </button>
     
-                                <button class="btn btn--file" id="btn-import-sound">
-                                    browse
-                                </button>
+                                <input type="file" class="btn btn--file" id="btnBrowseAlarm" accept="audio/*">
                             </div>
                             
                             <label class="checkbox">
@@ -160,7 +161,8 @@
 
     </main>
 
-    <script src="./js/functions.js"></script>
-    <script src="./js/timer.js"></script>
+    <script src="js/functions.js"></script>
+    <script src="js/timer.js"></script>
+    <script src="js/main.js"></script>
 </body>
 </html>

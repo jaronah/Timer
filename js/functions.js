@@ -13,6 +13,16 @@ const leadingZeros = (obj) => {
 
 }
 
+const getLeadingZerosNumber = (numInput) => {
+
+    let num = Number(numInput);
+
+    num = (num < 10) ? "0" + num : num;
+
+    return num;
+
+}
+
 /**
  * Open or Close Modal Window
  * ---------------------------
@@ -37,5 +47,28 @@ const openOrCloseModal = (obj) => {
         }
         
     }
+
+}
+
+
+/**
+ * 
+ * @param {String} fileName 
+ */
+const clearFileSuffix = (fileName) => {
+
+    let suffixStart;
+
+    if (fileName.includes('.')) {
+
+        for (let i = (fileName.length - 1); i >= 0; i--) {
+            if (fileName[i].includes('.')) {
+                suffixStart = i;
+                break;
+            }
+        }
+    }
+
+    return fileName.substring(0, suffixStart);
 
 }
