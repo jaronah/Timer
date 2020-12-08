@@ -409,6 +409,7 @@ btnSaveModal.onclick = () => {
 
         setTimerTimeout();
         insertTimeoutIntoHtml();
+        openOrCloseModal(modalEditTimer);
 
     } else {
 
@@ -417,8 +418,6 @@ btnSaveModal.onclick = () => {
         alert("Timeout could not be set. Only time more than 0.");
         
     }
-
-    openOrCloseModal(modalEditTimer);
     
     // if (getTimerCurrentTime() > 0) {
 
