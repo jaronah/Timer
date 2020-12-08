@@ -72,3 +72,13 @@ const clearFileSuffix = (fileName) => {
     return fileName.substring(0, suffixStart);
 
 }
+
+/**
+ * 
+ * @param {HTMLDivElement} id 
+ */
+const clearMessage = (id) => {
+    
+    id.innerHTML = "";
+    
+}
