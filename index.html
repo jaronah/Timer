@@ -40,7 +40,15 @@
                     <button class="btn btn--round btn--reset" id="btnReset">RESET</button>
                 </div>
     
-                <article class="timer-message" id="timerMessage"></article>
+                <div class="modal-wrapper d-n" id="modalMessage" status='close'">
+                    <div class="modal">
+                        <span>Timeout has left.</span>
+                        <button class="btn" id="btnSubmitMessage">OK</button>
+                    </div>
+
+                    <div class="modal-closable-area" id="closableAreaOfModalMessage">
+                    </div>
+                </div>
 
                 <div class="modal-wrapper d-n" id="modalEditTimer" status="close">
                     <div class="modal modal--edit">

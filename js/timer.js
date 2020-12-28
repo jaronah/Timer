@@ -16,8 +16,6 @@ const htmlTimerSeconds = document.getElementById('timerSeconds');
 const htmlTimerMinutes = document.getElementById('timerMinutes');
 const htmlTimerHours = document.getElementById('timerHours');
 
-const htmlTimerMessage = document.getElementById('timerMessage');
-
 const btnEdit = document.getElementById('btnEdit');
 const btnStartOrPause = document.getElementById('btnStartOrPause');
 const btnReset = document.getElementById('btnReset');
@@ -27,11 +25,14 @@ const btnReset = document.getElementById('btnReset');
  * --------------------------------
  */
 const modalEditTimer = document.getElementById('modalEditTimer');
-const modalClosableArea = document.getElementById('closableAreaOfEditTimer');
+const modalClosableAreaOfEditTimer = document.getElementById('closableAreaOfEditTimer');
+const modalMessage = document.getElementById('modalMessage');
+const modalClosableAreaOfMessage = document.getElementById('closableAreaOfModalMessage');
 
 const btnCloseModal = document.getElementById('btnCancelModalEditTimer');
 const btnStornoModal = document.getElementById('btnStornoModalEditTimer');
 const btnSaveModal = document.getElementById('btnSaveModalEditTimer');
+const btnSubmitMessage = document.getElementById('btnSubmitMessage');
 
 const btnSecondsIncrement = document.getElementById('seconds-increment');
 const btnSecondsDecrement = document.getElementById('seconds-decrement');
@@ -172,8 +173,8 @@ const timerCountdown = (ev) => {
             // hours to render:
             htmlTimerHours.innerText = getLeadingZerosNumber(Math.floor(currentTime / 60 / 60));
 
-        }
-
+        } 
+        
         if (currentTime === 0) {
 
             alarms[modalSelectAlarm.selectedOptions[0].value].play();
@@ -183,7 +184,7 @@ const timerCountdown = (ev) => {
             btnReset.disabled = false;
             btnEdit.disabled = false;
             htmlTimerTime.classList.add('disabled');
-            htmlTimerMessage.innerText = 'Timeout has left.';
+            openOrCloseModal(modalMessage);
         
         }
 
@@ -215,8 +216,6 @@ const insertTimeoutIntoHtml = () => {
     } else {
         htmlTimerTime.classList.remove('disabled');
     }
-
-    clearMessage(htmlTimerMessage);
 
     return status;
 
@@ -307,6 +306,11 @@ const enableOrDisableTimerButtons = () => {
     // || !statusOfTimerTimeout.isSet
 }
 
+const handleMessageModal = () => {
+    
+    openOrCloseModal(modalMessage);
+
+}
 
 //--------------------------------------------------------------------------------------------------------------------
 /**
@@ -431,13 +435,24 @@ btnSaveModal.onclick = () => {
 
 }
 
-modalClosableArea.onclick = () => {
+modalClosableAreaOfEditTimer.onclick = () => {
 
     openOrCloseModal(modalEditTimer);
     insertTimeoutIntoHtmlForModal();
 
 }
 
+modalClosableAreaOfMessage.onclick = () => {
+
+    handleMessageModal();
+
+}
+
+btnSubmitMessage.onclick = () => {
+
+    handleMessageModal();
+
+}
 
 btnSecondsIncrement.onclick = () => {
     if (modalSeconds.value < secondsMax) {
