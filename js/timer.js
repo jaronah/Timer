@@ -80,9 +80,9 @@ let repeatAlarmInterval = false;
 // setters:
 const setTimerTimeout = () => {
 
-    sessionStorage.setItem("timerSeconds", Number(modalSeconds.value));
-    sessionStorage.setItem("timerMinutes", Number(modalMinutes.value));
-    sessionStorage.setItem("timerHours", Number(modalHours.value));
+    localStorage.setItem("timerSeconds", Number(modalSeconds.value));
+    localStorage.setItem("timerMinutes", Number(modalMinutes.value));
+    localStorage.setItem("timerHours", Number(modalHours.value));
 
 }
 
@@ -100,14 +100,14 @@ const getTimerTimeout = () => {
     let hours = 0;
     let timeInSeconds = 0;
 
-    if (sessionStorage.getItem('timerSeconds') != null 
-        && sessionStorage.getItem('timerMinutes') != null
-        && sessionStorage.getItem('timerHours') != null)
+    if (localStorage.getItem('timerSeconds') != null 
+        && localStorage.getItem('timerMinutes') != null
+        && localStorage.getItem('timerHours') != null)
     {
 
-        seconds = Number(sessionStorage.getItem('timerSeconds'));
-        minutes = Number(sessionStorage.getItem('timerMinutes'));
-        hours = Number(sessionStorage.getItem('timerHours'));
+        seconds = Number(localStorage.getItem('timerSeconds'));
+        minutes = Number(localStorage.getItem('timerMinutes'));
+        hours = Number(localStorage.getItem('timerHours'));
 
         timeInSeconds = seconds + (minutes * 60) + (hours * 60 * 60);
 
@@ -120,9 +120,9 @@ const getStatusOfTimerTimeout = () => {
 
     let timeoutStatus = {isSet: false}; // Default: Timer Timeout is not set
 
-    if (sessionStorage.getItem('timerSeconds') != null 
-        && sessionStorage.getItem('timerMinutes') != null
-        && sessionStorage.getItem('timerHours') != null)
+    if (localStorage.getItem('timerSeconds') != null 
+        && localStorage.getItem('timerMinutes') != null
+        && localStorage.getItem('timerHours') != null)
     {
 
         timeoutStatus.isSet = true; // Timer Timeout is set
@@ -256,14 +256,14 @@ const insertTimeoutIntoHtmlForTimer = () => {
     
     let status = {isSet: false}; // Default: Timer Timeout is not set
 
-    if (sessionStorage.getItem('timerSeconds') != null 
-        && sessionStorage.getItem('timerMinutes') != null
-        && sessionStorage.getItem('timerHours') != null)
+    if (localStorage.getItem('timerSeconds') != null 
+        && localStorage.getItem('timerMinutes') != null
+        && localStorage.getItem('timerHours') != null)
     {
 
-        htmlTimerSeconds.innerText = getLeadingZerosNumber(sessionStorage.getItem('timerSeconds'));
-        htmlTimerMinutes.innerText = getLeadingZerosNumber(sessionStorage.getItem('timerMinutes'));
-        htmlTimerHours.innerText = getLeadingZerosNumber(sessionStorage.getItem('timerHours'));
+        htmlTimerSeconds.innerText = getLeadingZerosNumber(localStorage.getItem('timerSeconds'));
+        htmlTimerMinutes.innerText = getLeadingZerosNumber(localStorage.getItem('timerMinutes'));
+        htmlTimerHours.innerText = getLeadingZerosNumber(localStorage.getItem('timerHours'));
 
         status.isSet = true; // Timer Timeout is set
 
@@ -281,14 +281,14 @@ const insertTimeoutIntoHtmlForModal = () => {
     
     let status = {isSet: false}; // Default: Timer Timeout is not set
 
-    if (sessionStorage.getItem('timerSeconds') != null 
-        && sessionStorage.getItem('timerMinutes') != null
-        && sessionStorage.getItem('timerHours') != null)
+    if (localStorage.getItem('timerSeconds') != null 
+        && localStorage.getItem('timerMinutes') != null
+        && localStorage.getItem('timerHours') != null)
     {
         
-        modalSeconds.value = getLeadingZerosNumber(sessionStorage.getItem('timerSeconds'));
-        modalMinutes.value = getLeadingZerosNumber(sessionStorage.getItem('timerMinutes'));
-        modalHours.value = getLeadingZerosNumber(sessionStorage.getItem('timerHours'));
+        modalSeconds.value = getLeadingZerosNumber(localStorage.getItem('timerSeconds'));
+        modalMinutes.value = getLeadingZerosNumber(localStorage.getItem('timerMinutes'));
+        modalHours.value = getLeadingZerosNumber(localStorage.getItem('timerHours'));
 
         status.isSet = true; // Timer Timeout is set
 
