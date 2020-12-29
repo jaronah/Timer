@@ -63,7 +63,17 @@ const modalSelectAlarm = document.getElementById('modalSelectAlarm');
 const btnPlayAlarm = document.getElementById('btnPlayAlarm');
 const btnBrowseAlarm = document.getElementById('btnBrowseAlarm');
 
-const alarms = { 'iron': new Audio('./dist/audio/alarm_iron.mp3') };
+const checkboxRepeatAlarm = document.getElementById('checkbox-repeat-sound');
+
+const alarms = { 'iron': new Audio('./dist/audio/alarm_iron.mp3'),
+                 'air': new Audio('./dist/audio/alarm_air.mp3') };
+
+/**
+ * @type {HTMLAudioElement}
+ */                 
+let currentAlarm = '';
+
+let repeatAlarmInterval = false;
 
 /* FUNCTIONS */
 
@@ -177,7 +187,24 @@ const timerCountdown = (ev) => {
         
         if (currentTime === 0) {
 
-            alarms[modalSelectAlarm.selectedOptions[0].value].play();
+            currentAlarm = alarms[modalSelectAlarm.selectedOptions[0].value];
+
+            /* Plays once an alarm.
+               Also intended for interval playing an alarm repeatedly,
+               becouse interval plays first audio after elapsed interval duration */
+            currentAlarm.play();
+
+            // plays an alarm repeatedly in intervals
+            if (checkboxRepeatAlarm.checked) {
+
+                repeatAlarmInterval = setInterval(() => {
+
+                    currentAlarm.play();
+                    
+                }, (currentAlarm.duration * 1000) + 800);
+
+            }
+
             btnStartOrPause.classList.add('isPaused');
             btnStartOrPause.innerText = "START";
             btnStartOrPause.disabled = true;
@@ -309,6 +336,14 @@ const enableOrDisableTimerButtons = () => {
 const handleMessageModal = () => {
     
     openOrCloseModal(modalMessage);
+    
+    if (repeatAlarmInterval) {
+        clearInterval(repeatAlarmInterval);
+    }
+
+    if (isAudioPlaying(currentAlarm)) {
+        currentAlarm.pause();
+    }
 
 }
 

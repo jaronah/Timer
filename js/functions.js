@@ -82,3 +82,11 @@ const clearMessage = (id) => {
     id.innerHTML = "";
     
 }
+
+const isAudioPlaying = (audio) => {
+
+    if (audio instanceof HTMLAudioElement) {
+        return !audio.paused;
+    }
+
+}
