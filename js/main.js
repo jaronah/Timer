@@ -4,3 +4,9 @@
 
 insertTimeoutIntoHtml();
 enableOrDisableTimerButtons();
+
+if (localStorage.getItem('alarmsLocal')) {
+    
+    loadAlarmsLocal();
+
+}

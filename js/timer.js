@@ -69,6 +69,13 @@ const alarms = { 'iron': new Audio('./dist/audio/alarm_iron.mp3'),
                  'air': new Audio('./dist/audio/alarm_air.mp3') };
 
 /**
+ * Alarm sounds user added into a browser in modal 'Edit timer'
+ * 
+ * @type {Object}
+ */
+const alarmsLocal = JSON.parse(localStorage.getItem('alarmsLocal')) || {}; // later needed to condition JSON.parse to prevent errors
+
+/**
  * @type {HTMLAudioElement}
  */                 
 let currentAlarm = '';
@@ -563,27 +570,43 @@ btnPlayAlarm.onclick = () => {
 
 btnBrowseAlarm.onchange = () => {
     
-    var fReader = new FileReader();
-    fReader.readAsDataURL(btnBrowseAlarm.files[0]);
+    const fReader = new FileReader();
+    const file = btnBrowseAlarm.files[0];
+
+    if (file)
+        fReader.readAsDataURL(file);
+
     fReader.onloadend = (event) => {
-        alarms[clearFileSuffix(btnBrowseAlarm.files[0].name)] = new Audio(event.target.result);
-    }
 
-    // alarms['custom1'] = btnBrowseAlarm.value;
-    console.log(alarms);
-}
+        alarmsLocal[clearFileSuffix(file.name)] = event.target.result;
+        localStorage.setItem("alarmsLocal", JSON.stringify(alarmsLocal));
 
-const updateAlarmList = () => {
-
-    for (let i = 0; i < Object.keys(alarms).length; i++) {
-
-        let option = document.createElement('option');
-        // option.value = 
-
-
+        loadAlarmsLocal();
+        
     }
 
 }
 
-// loads alarms into modal 'Edit timer'
-// modalSelectAlarm.
+/**
+ * Function loads local alarms user added into a browser.
+ * It will manifest in the modal 'Edit timer' on the html select element with options of alarm sounds.
+ */
+const loadAlarmsLocal = () => {
+
+    for (let key in alarmsLocal) {
+            
+        if (!modalSelectAlarm.contains(key)) {
+
+            const option = document.createElement('option');
+
+            option.innerText = key;
+            modalSelectAlarm.appendChild(option);
+
+            // adds 'alarmsLocal' into object 'alarms'
+            alarms[key] = new Audio(alarmsLocal[key]);
+
+        }
+
+    }
+
+}
