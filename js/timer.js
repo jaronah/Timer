@@ -73,7 +73,8 @@ const alarms = { 'iron': new Audio('./dist/audio/alarm_iron.mp3'),
  * 
  * @type {Object}
  */
-const alarmsLocal = JSON.parse(localStorage.getItem('alarmsLocal')) || {}; // later needed to condition JSON.parse to prevent errors
+const alarmsLocal = (isJsonObject(localStorage.getItem('alarmsLocal'))) ? JSON.parse(localStorage.getItem('alarmsLocal')) : {};
+
 
 /**
  * @type {HTMLAudioElement}

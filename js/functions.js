@@ -90,3 +90,34 @@ const isAudioPlaying = (audio) => {
     }
 
 }
+
+/**
+ * 
+ * code by kubosho_, (c) Stack Exchange Inc
+ * licensed under CC BY-SA 3.0 - https://creativecommons.org/licenses/by-sa/3.0/
+ * source: https://stackoverflow.com/a/33369954/14570657
+ *  
+ * I have added: !(value instanceof Array)
+ * 
+ * @param {string} value 
+ */
+const isJsonObject = (value) => {
+
+    value = typeof value !== "string"
+        ? JSON.stringify(value)
+        : value;
+
+    try {
+        value = JSON.parse(value);
+    } catch (e) {
+        return false;
+    }
+
+
+    if (typeof value === "object" && !(value instanceof Array) && value !== null) {
+        return true;
+    }
+
+    return false;
+
+}
