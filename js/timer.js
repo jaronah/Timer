@@ -60,8 +60,11 @@ const modalHours = document.getElementById('modalHours');
  * @type {HTMLSelectElement}
  */
 const modalSelectAlarm = document.getElementById('modalSelectAlarm');
-const btnPlayAlarm = document.getElementById('btnPlayAlarm');
+const btnPlayOrPauseAlarm = document.getElementById('btnPlayOrPauseAlarm');
 const btnBrowseAlarm = document.getElementById('btnBrowseAlarm');
+
+const iconPlayAlarm = document.getElementById('iconPlayAlarm');
+const iconPauseAlarm = document.getElementById('iconPauseAlarm');
 
 const checkboxRepeatAlarm = document.getElementById('checkbox-repeat-sound');
 
@@ -563,9 +566,36 @@ modalHours.oninput = () => {
     
 }
 
-btnPlayAlarm.onclick = () => {
+btnPlayOrPauseAlarm.onclick = () => {
 
-    alarms[modalSelectAlarm.selectedOptions[0].value].play();
+    const currentAlarm = alarms[modalSelectAlarm.selectedOptions[0].value];
+
+
+    if (btnPlayOrPauseAlarm.getAttribute('status') === 'isPlaying') {
+
+        currentAlarm.pause();
+
+    } else {
+
+        currentAlarm.play();
+
+    }
+
+    currentAlarm.onpause = () => {
+
+        btnPlayOrPauseAlarm.setAttribute('status', '');
+        iconPauseAlarm.classList.add('d-n');
+        iconPlayAlarm.classList.remove('d-n'); // icon displayed
+
+    }
+
+    currentAlarm.onplay = () => {
+
+        btnPlayOrPauseAlarm.setAttribute('status', 'isPlaying');
+        iconPlayAlarm.classList.add('d-n');
+        iconPauseAlarm.classList.remove('d-n'); // icon displayed
+
+    }
 
 }
 
