@@ -50,6 +50,48 @@ const openOrCloseModal = (obj) => {
 
 }
 
+/**
+ * Icon PAUSE will be hidden, icon PLAY will be displayed.
+ * -------------------------------------------------------
+ * 
+ * Function works with attribute "status" in button element.
+ * There are two values of "status": status='' or status='isPlaying'.
+ * Status 'isPlaying' means the audio/video is playing, this is controlled outside of this function.
+ * CSS class .d-n means "display: none;"
+ * 
+ * @param {HTMLButtonElement} htmlBtn 
+ * @param {SVGElement} htmlIconPlay 
+ * @param {SVGElement} htmlIconPause 
+ */
+const switchIconPauseToPlay = (htmlBtn, htmlIconPlay, htmlIconPause) => {
+
+    htmlBtn.setAttribute('status', '');
+    htmlIconPause.classList.add('d-n');
+    htmlIconPlay.classList.remove('d-n'); // icon displayed
+
+}
+
+/**
+ * Icon PLAY will be hidden, icon PAUSE will be displayed.
+ * -------------------------------------------------------
+ * 
+ * Function works with attribute "status" in button element.
+ * There are two values of "status": status='' or status='isPlaying'.
+ * Status 'isPlaying' means the audio/video is playing, this is controlled outside of this function.
+ * CSS class .d-n means "display: none;"
+ * 
+ * @param {HTMLButtonElement} htmlBtn 
+ * @param {SVGElement} htmlIconPlay 
+ * @param {SVGElement} htmlIconPause 
+ */
+const switchIconPlayToPause = (htmlBtn, htmlIconPlay, htmlIconPause) => {
+
+    htmlBtn.setAttribute('status', 'isPlaying');
+    htmlIconPlay.classList.add('d-n');
+    htmlIconPause.classList.remove('d-n'); // icon displayed
+
+}
+
 
 /**
  * 

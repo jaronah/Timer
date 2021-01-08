@@ -78,6 +78,12 @@ const alarms = { 'iron': new Audio('./dist/audio/alarm_iron.mp3'),
  */
 const alarmsLocal = (isJsonObject(localStorage.getItem('alarmsLocal'))) ? JSON.parse(localStorage.getItem('alarmsLocal')) : {};
 
+/**
+ * Alarm sound preview from modal 'Edit timer'
+ * 
+ * @type {HTMLAudioElement}
+ */                 
+let testAlarm = alarms[modalSelectAlarm.selectedOptions[0].value];
 
 /**
  * @type {HTMLAudioElement}
@@ -358,6 +364,20 @@ const handleMessageModal = () => {
 
 }
 
+/**
+ * 
+ * @param {HTMLAudioElement} alarmSound 
+ */
+const handleAlarm = (alarmSound) => {
+
+    if (!alarmSound.paused) {
+
+        alarmSound.pause();
+        
+    }
+
+}
+
 //--------------------------------------------------------------------------------------------------------------------
 /**
  * 
@@ -370,7 +390,15 @@ const handleMessageModal = () => {
  * -------------------
  */
 btnEdit.onclick = () => {
+    
     openOrCloseModal(modalEditTimer);
+
+    if (testAlarm) {
+
+        testAlarm.load();
+
+    }
+
 }
 
 /**
@@ -431,6 +459,12 @@ btnCloseModal.onclick = () => {
     openOrCloseModal(modalEditTimer);
     insertTimeoutIntoHtmlForModal();
 
+    if (!alarmSound.paused) {
+
+        alarmSound.pause();
+        
+    }
+
 }
 
 /**
@@ -440,6 +474,8 @@ btnStornoModal.onclick = () => {
     
     openOrCloseModal(modalEditTimer);
     insertTimeoutIntoHtmlForModal();
+
+    handleAlarm(testAlarm);
 
 }
 
@@ -477,6 +513,8 @@ btnSaveModal.onclick = () => {
         
     // btnReset.disabled = true;
 
+    handleAlarm(testAlarm);
+
     enableOrDisableTimerButtons();
 
 }
@@ -485,6 +523,8 @@ modalClosableAreaOfEditTimer.onclick = () => {
 
     openOrCloseModal(modalEditTimer);
     insertTimeoutIntoHtmlForModal();
+
+    handleAlarm(testAlarm);
 
 }
 
@@ -568,32 +608,28 @@ modalHours.oninput = () => {
 
 btnPlayOrPauseAlarm.onclick = () => {
 
-    const currentAlarm = alarms[modalSelectAlarm.selectedOptions[0].value];
+    testAlarm = alarms[modalSelectAlarm.selectedOptions[0].value];
 
 
     if (btnPlayOrPauseAlarm.getAttribute('status') === 'isPlaying') {
 
-        currentAlarm.pause();
+        testAlarm.pause();
 
     } else {
 
-        currentAlarm.play();
+        testAlarm.play();
 
     }
 
-    currentAlarm.onpause = () => {
-
-        btnPlayOrPauseAlarm.setAttribute('status', '');
-        iconPauseAlarm.classList.add('d-n');
-        iconPlayAlarm.classList.remove('d-n'); // icon displayed
-
+    testAlarm.onpause = () => {
+        
+        switchIconPauseToPlay(btnPlayOrPauseAlarm, iconPlayAlarm, iconPauseAlarm);
+    
     }
 
-    currentAlarm.onplay = () => {
-
-        btnPlayOrPauseAlarm.setAttribute('status', 'isPlaying');
-        iconPlayAlarm.classList.add('d-n');
-        iconPauseAlarm.classList.remove('d-n'); // icon displayed
+    testAlarm.onplay = () => {
+    
+        switchIconPlayToPause(btnPlayOrPauseAlarm, iconPlayAlarm, iconPauseAlarm);
 
     }
 
