@@ -86,9 +86,11 @@ const alarmsLocal = (isJsonObject(localStorage.getItem('alarmsLocal'))) ? JSON.p
 let testAlarm = alarms[modalSelectAlarm.selectedOptions[0].value];
 
 /**
+ * Actual alarm sound
+ * 
  * @type {HTMLAudioElement}
  */                 
-let currentAlarm = '';
+let currentAlarm = alarms[modalSelectAlarm.selectedOptions[0].value];
 
 let repeatAlarmInterval = false;
 
