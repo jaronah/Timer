@@ -610,16 +610,16 @@ modalHours.oninput = () => {
 
 modalSelectAlarm.onchange = () => {
  
+    /**
+     * Loads selected test alarm to play from time 0.
+     * testAlarm gets updated when triggered btnPlayOrPauseAlarm.onclick. */
+    alarms[modalSelectAlarm.selectedOptions[0].value].load();
+
     if (!testAlarm.paused) {
         
         testAlarm.pause();
 
     }
-
-    /**
-     * Loads actual test alarm to play from time 0.
-     * Can't be use testAlarm.load() - it wouldn't trigger event testAlarm.onpause */
-    alarms[modalSelectAlarm.selectedOptions[0].value].load();
 
 }
 
