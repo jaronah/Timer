@@ -125,10 +125,18 @@ const clearMessage = (id) => {
     
 }
 
-const isAudioPlaying = (audio) => {
+/**
+ * Pauses audio if audio is playing
+ * --------------------------------
+ * 
+ * @param {HTMLAudioElement} audio
+ */
+const pauseAudio = (audio) => {
 
-    if (audio instanceof HTMLAudioElement) {
-        return !audio.paused;
+    if (!audio.paused) {
+
+        audio.pause();
+        
     }
 
 }

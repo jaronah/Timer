@@ -360,23 +360,7 @@ const handleMessageModal = () => {
         clearInterval(repeatAlarmInterval);
     }
 
-    if (isAudioPlaying(currentAlarm)) {
-        currentAlarm.pause();
-    }
-
-}
-
-/**
- * 
- * @param {HTMLAudioElement} alarmSound 
- */
-const handleAlarm = (alarmSound) => {
-
-    if (!alarmSound.paused) {
-
-        alarmSound.pause();
-        
-    }
+    pauseAudio(currentAlarm);
 
 }
 
@@ -461,11 +445,7 @@ btnCloseModal.onclick = () => {
     openOrCloseModal(modalEditTimer);
     insertTimeoutIntoHtmlForModal();
 
-    if (!alarmSound.paused) {
-
-        alarmSound.pause();
-        
-    }
+    pauseAudio(testAlarm);
 
 }
 
@@ -477,7 +457,7 @@ btnStornoModal.onclick = () => {
     openOrCloseModal(modalEditTimer);
     insertTimeoutIntoHtmlForModal();
 
-    handleAlarm(testAlarm);
+    pauseAudio(testAlarm);
 
 }
 
@@ -515,7 +495,7 @@ btnSaveModal.onclick = () => {
         
     // btnReset.disabled = true;
 
-    handleAlarm(testAlarm);
+    pauseAudio(testAlarm);
 
     enableOrDisableTimerButtons();
 
@@ -526,7 +506,7 @@ modalClosableAreaOfEditTimer.onclick = () => {
     openOrCloseModal(modalEditTimer);
     insertTimeoutIntoHtmlForModal();
 
-    handleAlarm(testAlarm);
+    pauseAudio(testAlarm);
 
 }
 
