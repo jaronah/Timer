@@ -364,6 +364,63 @@ const handleMessageModal = () => {
 
 }
 
+/**
+ * Function loads local alarms user added into a browser.
+ * It will manifest in the modal 'Edit timer' on the html select element with options of alarm sounds.
+ */
+const loadAlarmsLocal = () => {
+
+    for (let key in alarmsLocal) {
+            
+        if (!modalSelectAlarm.contains(key)) {
+
+            const option = document.createElement('option');
+
+            option.innerText = key;
+            modalSelectAlarm.appendChild(option);
+
+            // adds 'alarmsLocal' into object 'alarms'
+            alarms[key] = new Audio(alarmsLocal[key]);
+
+        }
+
+    }
+
+}
+
+const loadLocalStorageValues = () => {
+
+    const repeatAlarm = JSON.parse(localStorage.getItem('repeatAlarm'));
+    const currentAlarmName = localStorage.getItem('currentAlarmName');
+
+    // loading of local alarms imported by user to browser
+    if (localStorage.getItem('alarmsLocal')) {
+    
+        loadAlarmsLocal();
+    
+    }
+
+    // loading of repeat alarm property set by user
+    checkboxRepeatAlarm.checked = (repeatAlarm) ? true : false;
+
+    // loading of current alarm selected by user
+    if (alarms.hasOwnProperty(currentAlarmName)) {
+
+        for (let i = 0; i < modalSelectAlarm.length; i++) {
+
+            if (modalSelectAlarm[i].value === currentAlarmName) {
+
+                modalSelectAlarm.selectedIndex = i;
+                break;
+
+            }
+
+        }
+
+    }
+
+}
+
 //--------------------------------------------------------------------------------------------------------------------
 /**
  * 
@@ -477,6 +534,10 @@ btnSaveModal.onclick = () => {
 
         setTimerTimeout();
         insertTimeoutIntoHtml();
+
+        localStorage.setItem("currentAlarmName", modalSelectAlarm.selectedOptions[0].value);
+        localStorage.setItem("repeatAlarm", checkboxRepeatAlarm.checked);
+        
         openOrCloseModal(modalEditTimer);
 
     } else {
@@ -647,30 +708,6 @@ btnBrowseAlarm.onchange = () => {
 
         loadAlarmsLocal();
         
-    }
-
-}
-
-/**
- * Function loads local alarms user added into a browser.
- * It will manifest in the modal 'Edit timer' on the html select element with options of alarm sounds.
- */
-const loadAlarmsLocal = () => {
-
-    for (let key in alarmsLocal) {
-            
-        if (!modalSelectAlarm.contains(key)) {
-
-            const option = document.createElement('option');
-
-            option.innerText = key;
-            modalSelectAlarm.appendChild(option);
-
-            // adds 'alarmsLocal' into object 'alarms'
-            alarms[key] = new Audio(alarmsLocal[key]);
-
-        }
-
     }
 
 }
