@@ -370,17 +370,21 @@ const handleMessageModal = () => {
  */
 const loadAlarmsLocal = () => {
 
-    for (let key in alarmsLocal) {
-            
-        if (!modalSelectAlarm.contains(key)) {
+    if (Object.keys(alarmsLocal).length > 0) {
 
-            const option = document.createElement('option');
+        for (let key in alarmsLocal) {
+                
+            if (!modalSelectAlarm.contains(key)) {
 
-            option.innerText = key;
-            modalSelectAlarm.appendChild(option);
+                const option = document.createElement('option');
 
-            // adds 'alarmsLocal' into object 'alarms'
-            alarms[key] = new Audio(alarmsLocal[key]);
+                option.innerText = key;
+                modalSelectAlarm.appendChild(option);
+
+                // adds 'alarmsLocal' into object 'alarms'
+                alarms[key] = new Audio(alarmsLocal[key]);
+
+            }
 
         }
 
@@ -391,11 +395,7 @@ const loadAlarmsLocal = () => {
 const loadLocalStorageValues = () => {
 
     // loading of local alarms imported by user to browser
-    if (localStorage.getItem('alarmsLocal')) {
-    
-        loadAlarmsLocal();
-    
-    }
+    loadAlarmsLocal();
 
     // sets Repeat alarm html checkbox checked or unchecked
     setRepeatAlarm();
