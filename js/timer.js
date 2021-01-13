@@ -390,9 +390,6 @@ const loadAlarmsLocal = () => {
 
 const loadLocalStorageValues = () => {
 
-    const repeatAlarm = JSON.parse(localStorage.getItem('repeatAlarm'));
-    const currentAlarmName = localStorage.getItem('currentAlarmName');
-
     // loading of local alarms imported by user to browser
     if (localStorage.getItem('alarmsLocal')) {
     
@@ -400,10 +397,35 @@ const loadLocalStorageValues = () => {
     
     }
 
-    // loading of repeat alarm property set by user
-    checkboxRepeatAlarm.checked = (repeatAlarm) ? true : false;
+    // sets Repeat alarm html checkbox checked or unchecked
+    setRepeatAlarm();
 
-    // loading of current alarm selected by user
+    // sets current alarm selected by user into html select with alarm sounds
+    setCurrentAlarm();
+
+}
+
+/**
+ * Function resets values. Loads saved values from Local Storage
+ * and sets everything neccessary into html of modal 'Edit Timer'.
+ * 
+ */
+const resetModalEditTimer = () => {
+
+    insertTimeoutIntoHtmlForModal();
+    setCurrentAlarm();
+    setRepeatAlarm();
+
+}
+
+/**
+ * Sets current alarm saved in Local Storage into modal 'Edit timer'
+ * on the html select element with options of alarm sounds.
+ */
+const setCurrentAlarm = () => {
+
+    const currentAlarmName = localStorage.getItem('currentAlarmName');
+
     if (alarms.hasOwnProperty(currentAlarmName)) {
 
         for (let i = 0; i < modalSelectAlarm.length; i++) {
@@ -418,6 +440,17 @@ const loadLocalStorageValues = () => {
         }
 
     }
+
+}
+
+/**
+ * Sets repeat alarm saved in Local Storage for html checkbox Repeat alarm.
+ */
+const setRepeatAlarm = () => {
+
+    const repeatAlarm = JSON.parse(localStorage.getItem('repeatAlarm'));
+
+    checkboxRepeatAlarm.checked = (repeatAlarm) ? true : false;
 
 }
 
@@ -500,9 +533,8 @@ btnReset.onclick = (ev) => {
 btnCloseModal.onclick = () => {
 
     openOrCloseModal(modalEditTimer);
-    insertTimeoutIntoHtmlForModal();
-
     pauseAudio(testAlarm);
+    resetModalEditTimer();
 
 }
 
@@ -512,9 +544,8 @@ btnCloseModal.onclick = () => {
 btnStornoModal.onclick = () => {
     
     openOrCloseModal(modalEditTimer);
-    insertTimeoutIntoHtmlForModal();
-
     pauseAudio(testAlarm);
+    resetModalEditTimer();
 
 }
 
@@ -565,9 +596,8 @@ btnSaveModal.onclick = () => {
 modalClosableAreaOfEditTimer.onclick = () => {
 
     openOrCloseModal(modalEditTimer);
-    insertTimeoutIntoHtmlForModal();
-
     pauseAudio(testAlarm);
+    resetModalEditTimer();
 
 }
 
