@@ -1,3 +1,15 @@
+/**
+ * TIMER
+ * --------------------------------------------------------------
+ * 
+ * Setting of the Timer are accessible in a modal EDIT TIMER
+ * which opens after clicking a button "EDIT" on the main page of Timer.
+ * Values set by user are stored in Local Storage of user's browser.
+ * 
+ * by "render" in code I mean "render HTML" or "render into HTML" 
+ * 
+ */
+
 'use strict';
 
 /* total time in seconds */
@@ -66,27 +78,27 @@ const btnBrowseAlarm = document.getElementById('btnBrowseAlarm');
 const iconPlayAlarm = document.getElementById('iconPlayAlarm');
 const iconPauseAlarm = document.getElementById('iconPauseAlarm');
 
-const checkboxRepeatAlarm = document.getElementById('checkbox-repeat-sound');
+const checkboxRepeatAlarm = document.getElementById('checkboxRepeatAlarm');
 
 const alarms = { 'iron': new Audio('./dist/audio/alarm_iron.mp3'),
                  'air': new Audio('./dist/audio/alarm_air.mp3') };
 
 /**
- * Alarm sounds user added into a browser in modal 'Edit timer'
+ * Alarm audios user imported into a browser in the modal EDIT TIMER
  * 
  * @type {Object}
  */
-const alarmsLocal = (isJsonObject(localStorage.getItem('alarmsLocal'))) ? JSON.parse(localStorage.getItem('alarmsLocal')) : {};
+const customAlarms = (isJsonObject(localStorage.getItem('customAlarms'))) ? JSON.parse(localStorage.getItem('customAlarms')) : {};
 
 /**
- * Alarm sound preview from modal 'Edit timer'
+ * Alarm preview audio (used in the modal EDIT TIMER)
  * 
  * @type {HTMLAudioElement}
  */                 
 let testAlarm = alarms[modalSelectAlarm.selectedOptions[0].value];
 
 /**
- * Actual alarm sound
+ * Currently set alarm audio
  * 
  * @type {HTMLAudioElement}
  */                 
@@ -99,9 +111,9 @@ let repeatAlarmInterval = false;
 // setters:
 const setTimerTimeout = () => {
 
-    localStorage.setItem("timerSeconds", Number(modalSeconds.value));
-    localStorage.setItem("timerMinutes", Number(modalMinutes.value));
-    localStorage.setItem("timerHours", Number(modalHours.value));
+    localStorage.setItem('timerSeconds', Number(modalSeconds.value));
+    localStorage.setItem('timerMinutes', Number(modalMinutes.value));
+    localStorage.setItem('timerHours', Number(modalHours.value));
 
 }
 
@@ -247,15 +259,15 @@ const timerCountdown = (ev) => {
 }
 
 /**
- * Insert timeout values [hh:mm:ss] into html for both modal and timer
+ * Renders timeout values [hh:mm:ss] into HTML for both modal and timer
  * -------------------------------------------------------------------
  */
-const insertTimeoutIntoHtml = () => {
+const renderTimeout = () => {
 
     let status;
 
-    status = insertTimeoutIntoHtmlForTimer();
-    insertTimeoutIntoHtmlForModal();
+    status = renderTimeoutForTimer();
+    renderTimeoutForModal();
 
     if (getTimerCurrentTime() === 0) {
         htmlTimerTime.classList.add('disabled');
@@ -268,10 +280,10 @@ const insertTimeoutIntoHtml = () => {
 }
 
 /**
- * Insert timeout values [hh:mm:ss] into html only for timer
+ * Renders timeout values [hh:mm:ss] into HTML only for timer
  * ---------------------------------------------------------
  */
-const insertTimeoutIntoHtmlForTimer = () => {
+const renderTimeoutForTimer = () => {
     
     let status = {isSet: false}; // Default: Timer Timeout is not set
 
@@ -293,10 +305,10 @@ const insertTimeoutIntoHtmlForTimer = () => {
 }
 
 /**
- * Insert timeout values [hh:mm:ss] into html only for modal
+ * Renders timeout values [hh:mm:ss] into HTML only for modal
  * ---------------------------------------------------------
  */
-const insertTimeoutIntoHtmlForModal = () => {
+const renderTimeoutForModal = () => {
     
     let status = {isSet: false}; // Default: Timer Timeout is not set
 
@@ -365,14 +377,14 @@ const handleMessageModal = () => {
 }
 
 /**
- * Function loads local alarms user added into a browser.
- * It will manifest in the modal 'Edit timer' on the html select element with options of alarm sounds.
+ * Renders custom alarm name(s) as new option element(s)
+ * for HTML Select element containing options of alarms (in the modal EDIT TIMER).
  */
-const loadAlarmsLocal = () => {
+const renderCustomAlarms = () => {
 
-    if (Object.keys(alarmsLocal).length > 0) {
+    if (Object.keys(customAlarms).length > 0) {
 
-        for (let key in alarmsLocal) {
+        for (let key in customAlarms) {
                 
             if (!modalSelectAlarm.contains(key)) {
 
@@ -381,8 +393,8 @@ const loadAlarmsLocal = () => {
                 option.innerText = key;
                 modalSelectAlarm.appendChild(option);
 
-                // adds 'alarmsLocal' into object 'alarms'
-                alarms[key] = new Audio(alarmsLocal[key]);
+                // adds custom alarm(s) imported by user into object 'alarms'
+                alarms[key] = new Audio(customAlarms[key]);
 
             }
 
@@ -392,35 +404,28 @@ const loadAlarmsLocal = () => {
 
 }
 
-const loadLocalStorageValues = () => {
+const setUserSettingsOfTimer = () => {
 
-    // loading of local alarms imported by user to browser
-    loadAlarmsLocal();
-
-    // sets Repeat alarm html checkbox checked or unchecked
-    setRepeatAlarm();
-
-    // sets current alarm selected by user into html select with alarm sounds
+    renderCustomAlarms();
     setCurrentAlarm();
+    setRepeatAlarm();
 
 }
 
 /**
- * Function resets values. Loads saved values from Local Storage
- * and sets everything neccessary into html of modal 'Edit Timer'.
- * 
+ * Resets currently set values in the modal EDIT TIMER. Sets stored values from Local Storage.
  */
 const resetModalEditTimer = () => {
 
-    insertTimeoutIntoHtmlForModal();
+    renderTimeoutForModal();
     setCurrentAlarm();
     setRepeatAlarm();
 
 }
 
 /**
- * Sets current alarm saved in Local Storage into modal 'Edit timer'
- * on the html select element with options of alarm sounds.
+ * Selects an option of currently set alarm (stored in Local Storage)
+ * for HTML Select element containing alarm options.
  */
 const setCurrentAlarm = () => {
 
@@ -444,13 +449,11 @@ const setCurrentAlarm = () => {
 }
 
 /**
- * Sets repeat alarm saved in Local Storage for html checkbox Repeat alarm.
+ * Sets the checked property of HTML Checkbox repeat alarm by value stored in Local Storage.
  */
 const setRepeatAlarm = () => {
 
-    const repeatAlarm = JSON.parse(localStorage.getItem('repeatAlarm'));
-
-    checkboxRepeatAlarm.checked = (repeatAlarm) ? true : false;
+    checkboxRepeatAlarm.checked = JSON.parse(localStorage.getItem('repeatAlarm'));
 
 }
 
@@ -513,7 +516,7 @@ btnStartOrPause.onclick = (ev) => {
 
 btnReset.onclick = (ev) => {
     
-    insertTimeoutIntoHtml();
+    renderTimeout();
 
     btnStartOrPause.disabled = false;
     if (getTimerCurrentTime() === getTimerTimeout()) {
@@ -564,28 +567,19 @@ btnSaveModal.onclick = () => {
     if (timeInSeconds > 0) {
 
         setTimerTimeout();
-        insertTimeoutIntoHtml();
+        renderTimeout();
 
-        localStorage.setItem("currentAlarmName", modalSelectAlarm.selectedOptions[0].value);
-        localStorage.setItem("repeatAlarm", checkboxRepeatAlarm.checked);
+        localStorage.setItem('currentAlarmName', modalSelectAlarm.selectedOptions[0].value);
+        localStorage.setItem('repeatAlarm', checkboxRepeatAlarm.checked);
         
         openOrCloseModal(modalEditTimer);
 
     } else {
 
-        // inserts previously set timeout if exists into modal
-        insertTimeoutIntoHtmlForModal();
+        renderTimeoutForModal();
         alert("Timeout could not be set. Only time more than 0.");
         
     }
-    
-    // if (getTimerCurrentTime() > 0) {
-
-    //     btnStartOrPause.disabled = false;
-
-    // }
-        
-    // btnReset.disabled = true;
 
     pauseAudio(testAlarm);
 
@@ -733,10 +727,10 @@ btnBrowseAlarm.onchange = () => {
 
     fReader.onloadend = (event) => {
 
-        alarmsLocal[clearFileSuffix(file.name)] = event.target.result;
-        localStorage.setItem("alarmsLocal", JSON.stringify(alarmsLocal));
+        customAlarms[clearFileSuffix(file.name)] = event.target.result;
+        localStorage.setItem('customAlarms', JSON.stringify(customAlarms));
 
-        loadAlarmsLocal();
+        renderCustomAlarms();
         
     }
 

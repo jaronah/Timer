@@ -2,6 +2,6 @@
 
 // INITIAL SETTINGS WHEN PAGE LOADS:
 
-insertTimeoutIntoHtml();
+renderTimeout();
 enableOrDisableTimerButtons();
-loadLocalStorageValues();
+setUserSettingsOfTimer();
