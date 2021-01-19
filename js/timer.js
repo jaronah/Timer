@@ -12,9 +12,6 @@
 
 'use strict';
 
-/* total time in seconds */
-let time = 0;
-
 const secondsMax = 59;
 const minutesMax = 59;
 const hoursMax = 99;
