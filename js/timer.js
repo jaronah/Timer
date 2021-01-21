@@ -8,453 +8,466 @@
  * 
  * by "render" in code I mean "render HTML" or "render into HTML" 
  * 
+ * 
+ * !!! CAUTION !!!
+ * ---------------
+ * timer.js depends on: 'js/prototypes.js', 'js/functions.js'
+ * 
  */
 
 'use strict';
 
-const secondsMax = 59;
-const minutesMax = 59;
-const hoursMax = 99;
+const timer = {
 
-/**
- * Variables for main page:
- * ------------------------
- */
-const htmlTimerTime = document.getElementById('timerTime');
-const htmlTimerSeconds = document.getElementById('timerSeconds');
-const htmlTimerMinutes = document.getElementById('timerMinutes');
-const htmlTimerHours = document.getElementById('timerHours');
+    /**
+     * Currently set alarm audio
+     * 
+     * @type {HTMLAudioElement}
+     */                 
+    currentAlarm: '',
 
-const btnEdit = document.getElementById('btnEdit');
-const btnStartOrPause = document.getElementById('btnStartOrPause');
-const btnReset = document.getElementById('btnReset');
+    /**
+     * Alarm preview audio (used in the modal EDIT TIMER)
+     * 
+     * @type {HTMLAudioElement}
+     */
+    testAlarm: '',
 
-/**
- * Variables for modal: Edit Timer:
- * --------------------------------
- */
-const modalEditTimer = document.getElementById('modalEditTimer');
-const modalClosableAreaOfEditTimer = document.getElementById('closableAreaOfEditTimer');
-const modalMessage = document.getElementById('modalMessage');
-const modalClosableAreaOfMessage = document.getElementById('closableAreaOfModalMessage');
+    alarms: {
 
-const btnCloseModal = document.getElementById('btnCancelModalEditTimer');
-const btnStornoModal = document.getElementById('btnStornoModalEditTimer');
-const btnSaveModal = document.getElementById('btnSaveModalEditTimer');
-const btnSubmitMessage = document.getElementById('btnSubmitMessage');
+        iron: new Audio('./dist/audio/alarm_iron.mp3'),
+        air: new Audio('./dist/audio/alarm_air.mp3')
 
-const btnSecondsIncrement = document.getElementById('seconds-increment');
-const btnSecondsDecrement = document.getElementById('seconds-decrement');
-const btnMinutesIncrement = document.getElementById('minutes-increment');
-const btnMinutesDecrement = document.getElementById('minutes-decrement');
-const btnHoursIncrement = document.getElementById('hours-increment');
-const btnHoursDecrement = document.getElementById('hours-decrement');
+    },
 
-/**
- * @type {HTMLInputElement}
- */
-const modalSeconds = document.getElementById('modalSeconds');
-
-/**
- * @type {HTMLInputElement}
- */
-const modalMinutes = document.getElementById('modalMinutes');
-
-/**
- * @type {HTMLInputElement}
- */
-const modalHours = document.getElementById('modalHours');
-
-/**
- * @type {HTMLSelectElement}
- */
-const modalSelectAlarm = document.getElementById('modalSelectAlarm');
-const btnPlayOrPauseAlarm = document.getElementById('btnPlayOrPauseAlarm');
-const btnBrowseAlarm = document.getElementById('btnBrowseAlarm');
-
-const iconPlayAlarm = document.getElementById('iconPlayAlarm');
-const iconPauseAlarm = document.getElementById('iconPauseAlarm');
-
-const checkboxRepeatAlarm = document.getElementById('checkboxRepeatAlarm');
-
-const alarms = { 'iron': new Audio('./dist/audio/alarm_iron.mp3'),
-                 'air': new Audio('./dist/audio/alarm_air.mp3') };
-
-/**
- * Alarm audios user imported into a browser in the modal EDIT TIMER
- * 
- * @type {Object}
- */
-const customAlarms = (isJsonObject(localStorage.getItem('customAlarms'))) ? JSON.parse(localStorage.getItem('customAlarms')) : {};
-
-/**
- * Alarm preview audio (used in the modal EDIT TIMER)
- * 
- * @type {HTMLAudioElement}
- */                 
-let testAlarm = alarms[modalSelectAlarm.selectedOptions[0].value];
-
-/**
- * Currently set alarm audio
- * 
- * @type {HTMLAudioElement}
- */                 
-let currentAlarm = alarms[modalSelectAlarm.selectedOptions[0].value];
-
-let repeatAlarmInterval = false;
-
-/* FUNCTIONS */
-
-// setters:
-const setTimerTimeout = () => {
-
-    localStorage.setItem('timerSeconds', Number(modalSeconds.value));
-    localStorage.setItem('timerMinutes', Number(modalMinutes.value));
-    localStorage.setItem('timerHours', Number(modalHours.value));
-
-}
+    /**
+     * Alarm audios user imported into a browser in the modal EDIT TIMER
+     * 
+     * @type {Object}
+     */
+    customAlarms: (isJsonObject(localStorage.getItem('customAlarms'))) ? JSON.parse(localStorage.getItem('customAlarms')) : {},
 
 
+    repeatAlarmInterval: false,    
 
-// getters:
-/**
- * Returns set timeout in seconds
- * ------------------------------
- */
-const getTimerTimeout = () => {
+    // rendered time limitations:
+    secondsMax: 59,
+    minutesMax: 59,
+    hoursMax: 99,
+
+    /**
+     * Sets HTML DOM properties and alarm audios.
+     * ------------------------------------------
+     */
+    set: function () {
+
+        /**
+         * Variables for main page:
+         * ------------------------
+         */
+        this.htmlTimerTime = document.getElementById('timerTime');
+        this.htmlTimerSeconds = document.getElementById('timerSeconds');
+        this.htmlTimerMinutes = document.getElementById('timerMinutes');
+        this.htmlTimerHours = document.getElementById('timerHours');
+        
+        this.btnEdit = document.getElementById('btnEdit');
+        this.btnStartOrPause = document.getElementById('btnStartOrPause');
+        this.btnReset = document.getElementById('btnReset');
+
+        /**
+         * Variables for modals: Edit Timer, Message:
+         * ------------------------------------------
+         */
+        this.modalEditTimer = document.getElementById('modalEditTimer');
+        this.modalClosableAreaOfEditTimer = document.getElementById('closableAreaOfEditTimer');
+        this.modalMessage = document.getElementById('modalMessage');
+        this.modalClosableAreaOfMessage = document.getElementById('closableAreaOfModalMessage');
+        
+        this.btnCloseModal = document.getElementById('btnCancelModalEditTimer');
+        this.btnStornoModal = document.getElementById('btnStornoModalEditTimer');
+        this.btnSaveModal = document.getElementById('btnSaveModalEditTimer');
+        this.btnSubmitMessage = document.getElementById('btnSubmitMessage');
+       
+        this.btnSecondsIncrement = document.getElementById('seconds-increment');
+        this.btnSecondsDecrement = document.getElementById('seconds-decrement');
+        this.btnMinutesIncrement = document.getElementById('minutes-increment');
+        this.btnMinutesDecrement = document.getElementById('minutes-decrement');
+        this.btnHoursIncrement = document.getElementById('hours-increment');
+        this.btnHoursDecrement = document.getElementById('hours-decrement');
+
+        this.modalSeconds = document.getElementById('modalSeconds');
+        this.modalMinutes = document.getElementById('modalMinutes');
+        this.modalHours = document.getElementById('modalHours');
+
+        this.modalSelectAlarm = document.getElementById('modalSelectAlarm');
+        this.btnPlayOrPauseAlarm = document.getElementById('btnPlayOrPauseAlarm');
+        this.btnBrowseAlarm = document.getElementById('btnBrowseAlarm');
+        
+        this.iconPlayAlarm = document.getElementById('iconPlayAlarm');
+        this.iconPauseAlarm = document.getElementById('iconPauseAlarm');
+        
+        this.checkboxRepeatAlarm = document.getElementById('checkboxRepeatAlarm');
+
+        // alarm audios:
+        this.currentAlarm = this.alarms[this.modalSelectAlarm.selectedOptions[0].value];
+        this.testAlarm = this.alarms[this.modalSelectAlarm.selectedOptions[0].value];
+
+    },
+
+    setUserSettings: function () {
+
+        this.renderCustomAlarms();
+        this.setCurrentAlarm();
+        this.setRepeatAlarm();
     
-    let seconds = 0;
-    let minutes = 0;
-    let hours = 0;
-    let timeInSeconds = 0;
+    },
 
-    if (localStorage.getItem('timerSeconds') != null 
-        && localStorage.getItem('timerMinutes') != null
-        && localStorage.getItem('timerHours') != null)
-    {
+    setTimeout: function () {
+    
+        localStorage.setItem('timerSeconds', Number(this.modalSeconds.value));
+        localStorage.setItem('timerMinutes', Number(this.modalMinutes.value));
+        localStorage.setItem('timerHours', Number(this.modalHours.value));
+    
+    },
 
-        seconds = Number(localStorage.getItem('timerSeconds'));
-        minutes = Number(localStorage.getItem('timerMinutes'));
-        hours = Number(localStorage.getItem('timerHours'));
+    /**
+     * Selects an option of currently set alarm (stored in Local Storage)
+     * for HTML Select element containing alarm options.
+     */
+    setCurrentAlarm: function () {
+    
+        const currentAlarmName = localStorage.getItem('currentAlarmName');
+    
+        if (this.alarms.hasOwnProperty(currentAlarmName)) {
+    
+            for (let i = 0; i < this.modalSelectAlarm.length; i++) {
+    
+                if (this.modalSelectAlarm[i].value === currentAlarmName) {
+    
+                    this.modalSelectAlarm.selectedIndex = i;
+                    break;
+    
+                }
+    
+            }
+    
+        }
+    
+    },
+    
+    /**
+     * Sets the checked property of HTML Checkbox repeat alarm by value stored in Local Storage.
+     */
+    setRepeatAlarm: function () {
+    
+        this.checkboxRepeatAlarm.checked = JSON.parse(localStorage.getItem('repeatAlarm'));
+    
+    },
 
+    /**
+     * Returns set timeout in seconds
+     * ------------------------------
+     */
+    getTimeout: function () {
+        
+        let seconds = 0;
+        let minutes = 0;
+        let hours = 0;
+        let timeInSeconds = 0;
+    
+        if (localStorage.getItem('timerSeconds') != null 
+            && localStorage.getItem('timerMinutes') != null
+            && localStorage.getItem('timerHours') != null)
+        {
+    
+            seconds = Number(localStorage.getItem('timerSeconds'));
+            minutes = Number(localStorage.getItem('timerMinutes'));
+            hours = Number(localStorage.getItem('timerHours'));
+
+            timeInSeconds = seconds + (minutes * 60) + (hours * 60 * 60);
+    
+        }
+    
+        return timeInSeconds;
+
+    },
+
+
+    /**
+     * Returns current time of timer in seconds
+     * ----------------------------------------
+     */
+    getCurrentTime: function () {
+        
+        let seconds = 0;
+        let minutes = 0;
+        let hours = 0;
+        let timeInSeconds = 0;
+    
+        seconds = Number(this.htmlTimerSeconds.innerText);
+        minutes = Number(this.htmlTimerMinutes.innerText);
+        hours = Number(this.htmlTimerHours.innerText);
+    
         timeInSeconds = seconds + (minutes * 60) + (hours * 60 * 60);
-
-    }
-
-    return timeInSeconds;
-}
-
-const getStatusOfTimerTimeout = () => {
-
-    let timeoutStatus = {isSet: false}; // Default: Timer Timeout is not set
-
-    if (localStorage.getItem('timerSeconds') != null 
-        && localStorage.getItem('timerMinutes') != null
-        && localStorage.getItem('timerHours') != null)
-    {
-
-        timeoutStatus.isSet = true; // Timer Timeout is set
-
-    }
-
-    return timeoutStatus;
-
-}
-
-/**
- * Returns current time of timer in seconds
- * ----------------------------------------
- */
-const getTimerCurrentTime = () => {
     
-    let seconds = 0;
-    let minutes = 0;
-    let hours = 0;
-    let timeInSeconds = 0;
-
-    seconds = Number(htmlTimerSeconds.innerText);
-    minutes = Number(htmlTimerMinutes.innerText);
-    hours = Number(htmlTimerHours.innerText);
-
-    timeInSeconds = seconds + (minutes * 60) + (hours * 60 * 60);
-
-    return timeInSeconds;
-
-}
-
-
-
-/**
- * Countdown of Timer's set time
- * ------------------------------
- * 
- * @param {Event} ev
- */
-const timerCountdown = (ev) => {
+        return timeInSeconds;
     
-    let seconds = Number(htmlTimerSeconds.innerText);
-    let minutes = Number(htmlTimerMinutes.innerText);
-    let hours = Number(htmlTimerHours.innerText);
-    // total time in seconds:
-    let currentTime = seconds + (minutes * 60) + (hours * 60 * 60);
-
-    let interval = setInterval(() => {
-
-        if (!btnStartOrPause.classList.contains('isPaused') && currentTime > 0) {
-
-            currentTime--;
-
-            // seconds to render:
-            htmlTimerSeconds.innerText = getLeadingZerosNumber(currentTime % 60);
-            // minutes to render:
-            htmlTimerMinutes.innerText = getLeadingZerosNumber(Math.floor(currentTime / 60 % 60));
-            // hours to render:
-            htmlTimerHours.innerText = getLeadingZerosNumber(Math.floor(currentTime / 60 / 60));
-
-        } 
-        
-        if (currentTime === 0) {
-
-            currentAlarm = alarms[modalSelectAlarm.selectedOptions[0].value];
-
-            /* Plays once an alarm.
-               Also intended for interval playing an alarm repeatedly,
-               becouse interval plays first audio after elapsed interval duration */
-            currentAlarm.play();
-
-            // plays an alarm repeatedly in intervals
-            if (checkboxRepeatAlarm.checked) {
-
-                repeatAlarmInterval = setInterval(() => {
-
-                    currentAlarm.play();
-                    
-                }, (currentAlarm.duration * 1000) + 800);
-
-            }
-
-            btnStartOrPause.classList.add('isPaused');
-            btnStartOrPause.innerText = "START";
-            btnStartOrPause.disabled = true;
-            btnReset.disabled = false;
-            btnEdit.disabled = false;
-            htmlTimerTime.classList.add('disabled');
-            openOrCloseModal(modalMessage);
-        
+    },
+    
+    getStatusOfTimeout: function () {
+    
+        let timeoutStatus = {isSet: false}; // Default: Timer Timeout is not set
+    
+        if (localStorage.getItem('timerSeconds') != null 
+            && localStorage.getItem('timerMinutes') != null
+            && localStorage.getItem('timerHours') != null)
+        {
+    
+            timeoutStatus.isSet = true; // Timer Timeout is set
+    
         }
+    
+        return timeoutStatus;
+    
+    },
 
+    /**
+     * Resets currently set values in the modal EDIT TIMER. Sets stored values from Local Storage.
+     */
+    resetModalEditTimer: function () {
+    
+        this.renderTimeoutForModal();
+        this.setCurrentAlarm();
+        this.setRepeatAlarm();
+    
+    },
 
-        if (btnStartOrPause.classList.contains('isPaused')) {
+    /**
+     * Renders timeout values [hh:mm:ss] into HTML for both modal and timer
+     * -------------------------------------------------------------------
+     */
+    renderTimeout: function () {
+    
+        let status;
+    
+        status = this.renderTimeoutForTimer();
+        this.renderTimeoutForModal();
+        
+        if (this.getCurrentTime() === 0) {
             
-            ev.preventDefault();
-            clearInterval(interval);
-        
+            this.htmlTimerTime.classList.add('disabled');
+
+        } else {
+
+            this.htmlTimerTime.classList.remove('disabled');
+
         }
-
-    }, 1000);
-
-}
-
-/**
- * Renders timeout values [hh:mm:ss] into HTML for both modal and timer
- * -------------------------------------------------------------------
- */
-const renderTimeout = () => {
-
-    let status;
-
-    status = renderTimeoutForTimer();
-    renderTimeoutForModal();
-
-    if (getTimerCurrentTime() === 0) {
-        htmlTimerTime.classList.add('disabled');
-    } else {
-        htmlTimerTime.classList.remove('disabled');
-    }
-
-    return status;
-
-}
-
-/**
- * Renders timeout values [hh:mm:ss] into HTML only for timer
- * ---------------------------------------------------------
- */
-const renderTimeoutForTimer = () => {
     
-    let status = {isSet: false}; // Default: Timer Timeout is not set
-
-    if (localStorage.getItem('timerSeconds') != null 
-        && localStorage.getItem('timerMinutes') != null
-        && localStorage.getItem('timerHours') != null)
-    {
-
-        htmlTimerSeconds.innerText = getLeadingZerosNumber(localStorage.getItem('timerSeconds'));
-        htmlTimerMinutes.innerText = getLeadingZerosNumber(localStorage.getItem('timerMinutes'));
-        htmlTimerHours.innerText = getLeadingZerosNumber(localStorage.getItem('timerHours'));
-
-        status.isSet = true; // Timer Timeout is set
-
-    }
-
-    return status;
-
-}
-
-/**
- * Renders timeout values [hh:mm:ss] into HTML only for modal
- * ---------------------------------------------------------
- */
-const renderTimeoutForModal = () => {
+        return status;
     
-    let status = {isSet: false}; // Default: Timer Timeout is not set
+    },
 
-    if (localStorage.getItem('timerSeconds') != null 
-        && localStorage.getItem('timerMinutes') != null
-        && localStorage.getItem('timerHours') != null)
-    {
+
+    /**
+     * Renders timeout values [hh:mm:ss] into HTML only for timer
+     * ---------------------------------------------------------
+     */
+    renderTimeoutForTimer: function () {
+
+        let status = {isSet: false}; // Default: Timer Timeout is not set
+    
+        if (localStorage.getItem('timerSeconds') != null 
+            && localStorage.getItem('timerMinutes') != null
+            && localStorage.getItem('timerHours') != null)
+        {
+    
+            this.htmlTimerSeconds.innerText = getLeadingZerosNumber(localStorage.getItem('timerSeconds'));
+            this.htmlTimerMinutes.innerText = getLeadingZerosNumber(localStorage.getItem('timerMinutes'));
+            this.htmlTimerHours.innerText = getLeadingZerosNumber(localStorage.getItem('timerHours'));
+    
+            status.isSet = true; // Timer Timeout is set
+    
+        }
+    
+        return status;
+    
+    },
+    
+    /**
+     * Renders timeout values [hh:mm:ss] into HTML only for modal
+     * ---------------------------------------------------------
+     */
+    renderTimeoutForModal: () => {
         
-        modalSeconds.value = getLeadingZerosNumber(localStorage.getItem('timerSeconds'));
-        modalMinutes.value = getLeadingZerosNumber(localStorage.getItem('timerMinutes'));
-        modalHours.value = getLeadingZerosNumber(localStorage.getItem('timerHours'));
-
-        status.isSet = true; // Timer Timeout is set
-
-    }
-
-    return status;
-
-}
-
-
-/**
- * Enables or disables buttons (edit, start/pause, reset) depending on time
- */
-const enableOrDisableTimerButtons = () => {
+        let status = {isSet: false}; // Default: Timer Timeout is not set
     
-    let statusOfTimerTimeout = getStatusOfTimerTimeout();
-    let currentTime = getTimerCurrentTime();
-    let timerTimeout = getTimerTimeout();
+        if (localStorage.getItem('timerSeconds') != null 
+            && localStorage.getItem('timerMinutes') != null
+            && localStorage.getItem('timerHours') != null)
+        {
+            
+            this.modalSeconds.value = getLeadingZerosNumber(localStorage.getItem('timerSeconds'));
+            this.modalMinutes.value = getLeadingZerosNumber(localStorage.getItem('timerMinutes'));
+            this.modalHours.value = getLeadingZerosNumber(localStorage.getItem('timerHours'));
+    
+            status.isSet = true; // Timer Timeout is set
+    
+        }
+    
+        return status;
+    
+    },
 
-    if (currentTime === 0) {
+    /**
+     * Renders custom alarm name(s) as new option element(s)
+     * for HTML Select element containing options of alarms (in the modal EDIT TIMER).
+     */
+    renderCustomAlarms: function () {
+    
+        if (Object.keys(this.customAlarms).length > 0) {
+    
+            for (let key in this.customAlarms) {
+                    
+                if (!this.modalSelectAlarm.contains(key)) {
+    
+                    const option = document.createElement('option');
+    
+                    option.innerText = key;
+                    this.modalSelectAlarm.appendChild(option);
+    
+                    // adds custom alarm(s) imported by user into object 'alarms'
+                    this.alarms[key] = new Audio(this.customAlarms[key]);
+    
+                }
+    
+            }
+    
+        }
+    
+    },
 
-        btnStartOrPause.classList.add('isPaused');
-        btnStartOrPause.innerText = "START";
-        btnStartOrPause.disabled = true;
-        btnEdit.disabled = false;
-        (statusOfTimerTimeout.isSet) ? btnReset.disabled = false : btnReset.disabled = true;
 
-    } else if ( (currentTime > 0) && (currentTime < timerTimeout) ) {
-
-        btnStartOrPause.disabled = false;
-        btnEdit.disabled = false;
-        btnReset.disabled = false;
-
-    } else if (currentTime === timerTimeout) {
+    /**
+     * Countdown of Timer's set time
+     * ------------------------------
+     * 
+     * @param {Event} ev
+     */
+    countdown: function (ev) {
         
-        btnStartOrPause.disabled = false;
-        btnEdit.disabled = false;
-        btnReset.disabled = true;
-        
-    }
-
-    // || !statusOfTimerTimeout.isSet
-}
-
-const handleMessageModal = () => {
+        let seconds = Number(this.htmlTimerSeconds.innerText);
+        let minutes = Number(this.htmlTimerMinutes.innerText);
+        let hours = Number(this.htmlTimerHours.innerText);
+        // total time in seconds:
+        let currentTime = seconds + (minutes * 60) + (hours * 60 * 60);
     
-    openOrCloseModal(modalMessage);
+        let interval = setInterval(() => {
     
-    if (repeatAlarmInterval) {
-        clearInterval(repeatAlarmInterval);
-    }
-
-    pauseAudio(currentAlarm);
-
-}
-
-/**
- * Renders custom alarm name(s) as new option element(s)
- * for HTML Select element containing options of alarms (in the modal EDIT TIMER).
- */
-const renderCustomAlarms = () => {
-
-    if (Object.keys(customAlarms).length > 0) {
-
-        for (let key in customAlarms) {
+            if (!this.btnStartOrPause.classList.contains('isPaused') && currentTime > 0) {
+    
+                currentTime--;
+    
+                // seconds to render:
+                this.htmlTimerSeconds.innerText = getLeadingZerosNumber(currentTime % 60);
+                // minutes to render:
+                this.htmlTimerMinutes.innerText = getLeadingZerosNumber(Math.floor(currentTime / 60 % 60));
+                // hours to render:
+                this.htmlTimerHours.innerText = getLeadingZerosNumber(Math.floor(currentTime / 60 / 60));
+    
+            } 
+            
+            if (currentTime === 0) {
+    
+                this.currentAlarm = this.alarms[this.modalSelectAlarm.selectedOptions[0].value];
+    
+                /* Plays once an alarm.
+                   Also intended for interval playing an alarm repeatedly,
+                   becouse interval plays first audio after elapsed interval duration */
+                this.currentAlarm.play();
+    
+                // plays an alarm repeatedly in intervals
+                if (checkboxRepeatAlarm.checked) {
+    
+                    this.repeatAlarmInterval = setInterval(() => {
+    
+                        this.currentAlarm.play();
+                        
+                    }, (this.currentAlarm.duration * 1000) + 800);
+    
+                }
+    
+                this.btnStartOrPause.classList.add('isPaused');
+                this.btnStartOrPause.innerText = "START";
+                this.btnStartOrPause.disabled = true;
+                this.btnReset.disabled = false;
+                this.btnEdit.disabled = false;
+                this.htmlTimerTime.classList.add('disabled');
+                openOrCloseModal(this.modalMessage);
+            
+            }
+    
+    
+            if (this.btnStartOrPause.classList.contains('isPaused')) {
                 
-            if (!modalSelectAlarm.contains(key)) {
-
-                const option = document.createElement('option');
-
-                option.innerText = key;
-                modalSelectAlarm.appendChild(option);
-
-                // adds custom alarm(s) imported by user into object 'alarms'
-                alarms[key] = new Audio(customAlarms[key]);
-
+                ev.preventDefault();
+                clearInterval(interval);
+            
             }
+    
+        }, 1000);
+    
+    },
 
+    /**
+     * Enables or disables control buttons (edit, start/pause, reset) depending on time
+     */
+    enableOrDisableControlButtons: function () {
+        
+        let statusOfTimerTimeout = this.getStatusOfTimeout();
+        let currentTime = this.getCurrentTime();
+        let timerTimeout = this.getTimeout();
+    
+        if (currentTime === 0) {
+    
+            this.btnStartOrPause.classList.add('isPaused');
+            this.btnStartOrPause.innerText = "START";
+            this.btnStartOrPause.disabled = true;
+            this.btnEdit.disabled = false;
+            this.btnReset.disabled = (statusOfTimerTimeout.isSet) ? false : true;
+    
+        } else if ( (currentTime > 0) && (currentTime < timerTimeout) ) {
+    
+            this.btnStartOrPause.disabled = false;
+            this.btnEdit.disabled = false;
+            this.btnReset.disabled = false;
+    
+        } else if (currentTime === timerTimeout) {
+            
+            this.btnStartOrPause.disabled = false;
+            this.btnEdit.disabled = false;
+            this.btnReset.disabled = true;
+            
+        }
+    
+    },
+
+    handleMessageModal: function () {
+
+        openOrCloseModal(this.modalMessage);
+        
+        if (this.repeatAlarmInterval) {
+            clearInterval(this.repeatAlarmInterval);
         }
 
+        pauseAudio(this.currentAlarm);
+        
     }
 
-}
+};
 
-const setUserSettingsOfTimer = () => {
 
-    renderCustomAlarms();
-    setCurrentAlarm();
-    setRepeatAlarm();
+timer.set();
 
-}
-
-/**
- * Resets currently set values in the modal EDIT TIMER. Sets stored values from Local Storage.
- */
-const resetModalEditTimer = () => {
-
-    renderTimeoutForModal();
-    setCurrentAlarm();
-    setRepeatAlarm();
-
-}
-
-/**
- * Selects an option of currently set alarm (stored in Local Storage)
- * for HTML Select element containing alarm options.
- */
-const setCurrentAlarm = () => {
-
-    const currentAlarmName = localStorage.getItem('currentAlarmName');
-
-    if (alarms.hasOwnProperty(currentAlarmName)) {
-
-        for (let i = 0; i < modalSelectAlarm.length; i++) {
-
-            if (modalSelectAlarm[i].value === currentAlarmName) {
-
-                modalSelectAlarm.selectedIndex = i;
-                break;
-
-            }
-
-        }
-
-    }
-
-}
-
-/**
- * Sets the checked property of HTML Checkbox repeat alarm by value stored in Local Storage.
- */
-const setRepeatAlarm = () => {
-
-    checkboxRepeatAlarm.checked = JSON.parse(localStorage.getItem('repeatAlarm'));
-
-}
-
-//--------------------------------------------------------------------------------------------------------------------
 /**
  * 
  * EVENT HANDLERS:
@@ -465,13 +478,13 @@ const setRepeatAlarm = () => {
  * FRONT PAGE BUTTONS:
  * -------------------
  */
-btnEdit.onclick = () => {
+timer.btnEdit.onclick = () => {
     
-    openOrCloseModal(modalEditTimer);
+    openOrCloseModal(timer.modalEditTimer);
 
-    if (testAlarm) {
+    if (timer.testAlarm) {
 
-        testAlarm.load();
+        timer.testAlarm.load();
 
     }
 
@@ -481,44 +494,44 @@ btnEdit.onclick = () => {
  * Hanles click event on btnStartOrPause
  * --------------------------------------
  * 
- * Exception: enables or disables buttons other way than enableOrDisableTimerButtons() 
- * Control text of button: 'START' or 'PAUSE'
+ * Exception: enables or disables control buttons other way than enableOrDisableControlButtons() 
+ * Switches text of button: 'START' or 'PAUSE'
  * 
  * @param {Event} ev 
  */
-btnStartOrPause.onclick = (ev) => {
+timer.btnStartOrPause.onclick = (ev) => {
     
-     if (btnStartOrPause.classList.contains('isPaused')) {
+        if (timer.btnStartOrPause.classList.contains('isPaused')) {
 
-        btnStartOrPause.innerText = 'PAUSE';
-        btnEdit.disabled = true;
-        btnReset.disabled = true;
+        timer.btnStartOrPause.innerText = 'PAUSE';
+        timer.btnEdit.disabled = true;
+        timer.btnReset.disabled = true;
 
     } else {
 
-        btnStartOrPause.innerText = 'START';
-        btnEdit.disabled = false;
-        if (getTimerCurrentTime() != getTimerTimeout()) {
-            btnReset.disabled = false;
+        timer.btnStartOrPause.innerText = 'START';
+        timer.btnEdit.disabled = false;
+        if (timer.getCurrentTime() != timer.getTimeout()) {
+            timer.btnReset.disabled = false;
         }
 
     }
 
-    btnStartOrPause.classList.toggle('isPaused');
+    timer.btnStartOrPause.classList.toggle('isPaused');
 
 
-    timerCountdown(ev);
+    timer.countdown(ev);
 
 }
 
-btnReset.onclick = (ev) => {
+timer.btnReset.onclick = (ev) => {
     
-    renderTimeout();
+    timer.renderTimeout();
 
-    btnStartOrPause.disabled = false;
-    if (getTimerCurrentTime() === getTimerTimeout()) {
+    timer.btnStartOrPause.disabled = false;
+    if (timer.getCurrentTime() === timer.getTimeout()) {
         
-        btnReset.disabled = true;
+        timer.btnReset.disabled = true;
 
     }
 
@@ -530,204 +543,206 @@ btnReset.onclick = (ev) => {
 /**
  * Close modal without setting a time
  */
-btnCloseModal.onclick = () => {
+timer.btnCloseModal.onclick = () => {
 
-    openOrCloseModal(modalEditTimer);
-    pauseAudio(testAlarm);
-    resetModalEditTimer();
+    openOrCloseModal(timer.modalEditTimer);
+    pauseAudio(timer.testAlarm);
+    timer.resetModalEditTimer();
 
 }
 
 /**
  * Close modal without setting a time
  */
-btnStornoModal.onclick = () => {
+timer.btnStornoModal.onclick = () => {
     
-    openOrCloseModal(modalEditTimer);
-    pauseAudio(testAlarm);
-    resetModalEditTimer();
+    openOrCloseModal(timer.modalEditTimer);
+    pauseAudio(timer.testAlarm);
+    timer.resetModalEditTimer();
 
 }
 
 /**
  * Close modal and set a time
  */
-btnSaveModal.onclick = () => {
+timer.btnSaveModal.onclick = () => {
 
-    let seconds = Number(modalSeconds.value);
-    let minutes = Number(modalMinutes.value);
-    let hours = Number(modalHours.value);
+    let seconds = Number(timer.modalSeconds.value);
+    let minutes = Number(timer.modalMinutes.value);
+    let hours = Number(timer.modalHours.value);
     let timeInSeconds = 0;
 
     timeInSeconds = seconds + (minutes * 60) + (hours * 60 * 60);
 
     if (timeInSeconds > 0) {
 
-        setTimerTimeout();
-        renderTimeout();
+        timer.setTimeout();
+        timer.renderTimeout();
 
-        localStorage.setItem('currentAlarmName', modalSelectAlarm.selectedOptions[0].value);
-        localStorage.setItem('repeatAlarm', checkboxRepeatAlarm.checked);
+        localStorage.setItem('currentAlarmName', timer.modalSelectAlarm.selectedOptions[0].value);
+        localStorage.setItem('repeatAlarm', timer.checkboxRepeatAlarm.checked);
         
-        openOrCloseModal(modalEditTimer);
+        openOrCloseModal(timer.modalEditTimer);
 
     } else {
 
-        renderTimeoutForModal();
+        timer.renderTimeoutForModal();
         alert("Timeout could not be set. Only time more than 0.");
         
     }
 
-    pauseAudio(testAlarm);
+    pauseAudio(timer.testAlarm);
 
-    enableOrDisableTimerButtons();
-
-}
-
-modalClosableAreaOfEditTimer.onclick = () => {
-
-    openOrCloseModal(modalEditTimer);
-    pauseAudio(testAlarm);
-    resetModalEditTimer();
+    timer.enableOrDisableControlButtons();
 
 }
 
-modalClosableAreaOfMessage.onclick = () => {
+timer.modalClosableAreaOfEditTimer.onclick = () => {
 
-    handleMessageModal();
-
-}
-
-btnSubmitMessage.onclick = () => {
-
-    handleMessageModal();
+    openOrCloseModal(timer.modalEditTimer);
+    pauseAudio(timer.testAlarm);
+    timer.resetModalEditTimer();
 
 }
 
-btnSecondsIncrement.onclick = () => {
-    if (modalSeconds.value < secondsMax) {
-        modalSeconds.value++;
-        leadingZeros(modalSeconds);
+timer.modalClosableAreaOfMessage.onclick = () => {
+
+    timer.handleMessageModal();
+
+}
+
+timer.btnSubmitMessage.onclick = () => {
+
+    timer.handleMessageModal();
+
+}
+
+timer.btnSecondsIncrement.onclick = () => {
+    
+    if (timer.modalSeconds.value < timer.secondsMax) {
+        timer.modalSeconds.value++;
+        leadingZeros(timer.modalSeconds);
+    }
+
+};
+
+timer.btnSecondsDecrement.onclick = () => {
+    if (timer.modalSeconds.value > 0) {
+        timer.modalSeconds.value--;
+        leadingZeros(timer.modalSeconds);
+    }
+}
+
+timer.btnMinutesIncrement.onclick = () => {
+    if (timer.modalMinutes.value < timer.minutesMax) {
+        timer.modalMinutes.value++;
+        leadingZeros(timer.modalMinutes);
     }
 };
 
-btnSecondsDecrement.onclick = () => {
-    if (modalSeconds.value > 0) {
-        modalSeconds.value--;
-        leadingZeros(modalSeconds);
+timer.btnMinutesDecrement.onclick = () => {
+    if (timer.modalMinutes.value > 0) {
+        timer.modalMinutes.value--;
+        leadingZeros(timer.modalMinutes);
     }
 }
 
-btnMinutesIncrement.onclick = () => {
-    if (modalMinutes.value < minutesMax) {
-        modalMinutes.value++;
-        leadingZeros(modalMinutes);
+timer.btnHoursIncrement.onclick = () => {
+    if (timer.modalHours.value < hoursMax) {
+        timer.modalHours.value++;
+        leadingZeros(timer.modalHours);
     }
 };
 
-btnMinutesDecrement.onclick = () => {
-    if (modalMinutes.value > 0) {
-        modalMinutes.value--;
-        leadingZeros(modalMinutes);
+timer.btnHoursDecrement.onclick = () => {
+    if (timer.modalHours.value > 0) {
+        timer.modalHours.value--;
+        leadingZeros(timer.modalHours);
     }
 }
 
-btnHoursIncrement.onclick = () => {
-    if (modalHours.value < hoursMax) {
-        modalHours.value++;
-        leadingZeros(modalHours);
-    }
-};
+timer.modalSeconds.oninput = () => {
 
-btnHoursDecrement.onclick = () => {
-    if (modalHours.value > 0) {
-        modalHours.value--;
-        leadingZeros(modalHours);
-    }
-}
-
-modalSeconds.oninput = () => {
-
-    if (modalSeconds.value > secondsMax) {
-        modalSeconds.value = secondsMax;
+    if (timer.modalSeconds.value > timer.secondsMax) {
+        timer.modalSeconds.value = timer.secondsMax;
     }
 
 }
 
-modalMinutes.oninput = () => {
+timer.modalMinutes.oninput = () => {
 
-    if (modalMinutes.value > minutesMax) {
-        modalMinutes.value = minutesMax;
+    if (timer.modalMinutes.value > timer.minutesMax) {
+        timer.modalMinutes.value = timer.minutesMax;
     }
     
 }
 
-modalHours.oninput = () => {
+timer.modalHours.oninput = () => {
 
-    if (modalHours.value > hoursMax) {
-        modalHours.value = hoursMax;
+    if (timer.modalHours.value > timer.hoursMax) {
+        timer.modalHours.value = timer.hoursMax;
     }
     
 }
 
-modalSelectAlarm.onchange = () => {
- 
+timer.modalSelectAlarm.onchange = () => {
+    
     /**
      * Loads selected test alarm to play from time 0.
      * testAlarm gets updated when triggered btnPlayOrPauseAlarm.onclick. */
-    alarms[modalSelectAlarm.selectedOptions[0].value].load();
+    timer.alarms[timer.modalSelectAlarm.selectedOptions[0].value].load();
 
-    if (!testAlarm.paused) {
+    if (!timer.testAlarm.paused) {
         
-        testAlarm.pause();
+        timer.testAlarm.pause();
 
     }
 
 }
 
-btnPlayOrPauseAlarm.onclick = () => {
+timer.btnPlayOrPauseAlarm.onclick = () => {
 
-    testAlarm = alarms[modalSelectAlarm.selectedOptions[0].value];
+    timer.testAlarm = timer.alarms[timer.modalSelectAlarm.selectedOptions[0].value];
 
 
-    if (btnPlayOrPauseAlarm.getAttribute('status') === 'isPlaying') {
+    if (timer.btnPlayOrPauseAlarm.getAttribute('status') === 'isPlaying') {
 
-        testAlarm.pause();
+        timer.testAlarm.pause();
 
     } else {
 
-        testAlarm.play();
+        timer.testAlarm.play();
 
     }
 
-    testAlarm.onpause = () => {
+    timer.testAlarm.onpause = () => {
         
-        switchIconPauseToPlay(btnPlayOrPauseAlarm, iconPlayAlarm, iconPauseAlarm);
+        switchIconPauseToPlay(timer.btnPlayOrPauseAlarm, timer.iconPlayAlarm, timer.iconPauseAlarm);
     
     }
 
-    testAlarm.onplay = () => {
+    timer.testAlarm.onplay = () => {
     
-        switchIconPlayToPause(btnPlayOrPauseAlarm, iconPlayAlarm, iconPauseAlarm);
+        switchIconPlayToPause(timer.btnPlayOrPauseAlarm, timer.iconPlayAlarm, timer.iconPauseAlarm);
 
     }
 
 }
 
-btnBrowseAlarm.onchange = () => {
+timer.btnBrowseAlarm.onchange = () => {
     
     const fReader = new FileReader();
-    const file = btnBrowseAlarm.files[0];
+    const file = timer.btnBrowseAlarm.files[0];
 
     if (file)
         fReader.readAsDataURL(file);
 
     fReader.onloadend = (event) => {
 
-        customAlarms[clearFileSuffix(file.name)] = event.target.result;
-        localStorage.setItem('customAlarms', JSON.stringify(customAlarms));
+        timer.customAlarms[clearFileSuffix(file.name)] = event.target.result;
+        localStorage.setItem('customAlarms', JSON.stringify(timer.customAlarms));
 
-        renderCustomAlarms();
+        timer.renderCustomAlarms();
         
     }
 

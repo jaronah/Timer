@@ -2,6 +2,6 @@
 
 // INITIAL SETTINGS WHEN PAGE LOADS:
 
-renderTimeout();
-enableOrDisableTimerButtons();
-setUserSettingsOfTimer();
+timer.renderTimeout();
+timer.enableOrDisableControlButtons();
+timer.setUserSettings();
