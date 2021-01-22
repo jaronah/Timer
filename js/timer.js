@@ -297,7 +297,7 @@ const timer = {
      * Renders timeout values [hh:mm:ss] into HTML only for modal
      * ---------------------------------------------------------
      */
-    renderTimeoutForModal: () => {
+    renderTimeoutForModal: function () {
         
         let status = {isSet: false}; // Default: Timer Timeout is not set
     
