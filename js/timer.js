@@ -104,7 +104,7 @@ const timer = {
 
         this.htmlModalEdit.selectAlarm = document.getElementById('modalSelectAlarm');
         this.htmlModalEdit.btnPlayOrPauseAlarm = document.getElementById('btnPlayOrPauseAlarm');
-        this.htmlModalEdit.btnPlayOrPauseAlarm = document.getElementById('btnBrowseAlarm');
+        this.htmlModalEdit.btnBrowseAlarm = document.getElementById('btnBrowseAlarm');
         
         this.htmlModalEdit.iconPlayAlarm = document.getElementById('iconPlayAlarm');
         this.htmlModalEdit.iconPauseAlarm = document.getElementById('iconPauseAlarm');

@@ -279,7 +279,7 @@ window.onload = function () {
     timer.htmlModalEdit.btnBrowseAlarm.onchange = () => {
         
         const fReader = new FileReader();
-        const file = timer.htmlModalEdit.btnPlayOrPauseAlarm.files[0];
+        const file = timer.htmlModalEdit.btnBrowseAlarm.files[0];
 
         if (file)
             fReader.readAsDataURL(file);
