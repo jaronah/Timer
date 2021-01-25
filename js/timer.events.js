@@ -192,7 +192,7 @@ window.onload = function () {
 
     timer.htmlModalEdit.btnHourIncrement.onclick = () => {
         
-        if (timer.htmlModalEdit.hours.value < hoursMax) {
+        if (timer.htmlModalEdit.hours.value < timer.hoursMax) {
             timer.htmlModalEdit.hours.value++;
             leadingZeros(timer.htmlModalEdit.hours);
         }
