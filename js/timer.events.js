@@ -38,6 +38,8 @@ window.onload = function () {
      */
     timer.htmlBtnStartOrPause.onclick = (ev) => {
         
+        timer.currentAlarm.load();
+
         if (timer.htmlBtnStartOrPause.classList.contains('isPaused')) {
 
             timer.htmlBtnStartOrPause.innerText = 'PAUSE';

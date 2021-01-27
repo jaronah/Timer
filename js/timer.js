@@ -254,12 +254,6 @@ const timer = {
 
     closeModalEditTimer: function () {
         
-        if (this.currentAlarm instanceof Audio) {
-
-            this.currentAlarm.load();
-
-        }
-
     },
 
     /**
