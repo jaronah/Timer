@@ -19,9 +19,9 @@ window.onload = function () {
         
         openOrCloseModal(timer.htmlModalEdit.container);
 
-        if (timer.testAlarm) {
+        if (timer.currentAlarm instanceof Audio) {
 
-            timer.testAlarm.load();
+            timer.currentAlarm.load();
 
         }
 
@@ -83,8 +83,9 @@ window.onload = function () {
     timer.htmlModalEdit.btnCancel.onclick = () => {
 
         openOrCloseModal(timer.htmlModalEdit.container);
-        pauseAudio(timer.testAlarm);
+        pauseAudio(timer.currentAlarm);
         timer.resetModalEditTimer();
+        timer.closeModalEditTimer();
 
     }
 
@@ -94,8 +95,9 @@ window.onload = function () {
     timer.htmlModalEdit.btnStorno.onclick = () => {
         
         openOrCloseModal(timer.htmlModalEdit.container);
-        pauseAudio(timer.testAlarm);
+        pauseAudio(timer.currentAlarm);
         timer.resetModalEditTimer();
+        timer.closeModalEditTimer();
 
     }
 
@@ -128,17 +130,19 @@ window.onload = function () {
             
         }
 
-        pauseAudio(timer.testAlarm);
+        pauseAudio(timer.currentAlarm);
 
         timer.enableOrDisableControlButtons();
+        timer.closeModalEditTimer();
 
     }
 
     timer.htmlModalEdit.closableArea.onclick = () => {
 
         openOrCloseModal(timer.htmlModalEdit.container);
-        pauseAudio(timer.testAlarm);
+        pauseAudio(timer.currentAlarm);
         timer.resetModalEditTimer();
+        timer.closeModalEditTimer();
 
     }
 
@@ -234,41 +238,36 @@ window.onload = function () {
 
     timer.htmlModalEdit.selectAlarm.onchange = () => {
         
-        /**
-         * Loads selected test alarm to play from time 0.
-         * testAlarm gets updated when triggered htmlModalEdit.btnPlayOrPauseAlarm.onclick. */
-        timer.alarms[timer.htmlModalEdit.selectAlarm.selectedOptions[0].value].load();
-
-        if (!timer.testAlarm.paused) {
+        if (!timer.currentAlarm.paused) {
             
-            timer.testAlarm.pause();
+            timer.currentAlarm.pause();
 
         }
+
+        timer.setCurrentAlarm(); // currentAlarm updated
+        timer.currentAlarm.load();
 
     }
 
     timer.htmlModalEdit.btnPlayOrPauseAlarm.onclick = () => {
 
-        timer.testAlarm = timer.alarms[timer.htmlModalEdit.selectAlarm.selectedOptions[0].value];
-
-
         if (timer.htmlModalEdit.btnPlayOrPauseAlarm.getAttribute('status') === 'isPlaying') {
 
-            timer.testAlarm.pause();
+            timer.currentAlarm.pause();
 
         } else {
 
-            timer.testAlarm.play();
+            timer.currentAlarm.play();
 
         }
 
-        timer.testAlarm.onpause = () => {
+        timer.currentAlarm.onpause = () => {
             
             switchIconPauseToPlay(timer.htmlModalEdit.btnPlayOrPauseAlarm, timer.htmlModalEdit.iconPlayAlarm, timer.htmlModalEdit.iconPauseAlarm);
         
         }
 
-        timer.testAlarm.onplay = () => {
+        timer.currentAlarm.onplay = () => {
         
             switchIconPlayToPause(timer.htmlModalEdit.btnPlayOrPauseAlarm, timer.htmlModalEdit.iconPlayAlarm, timer.htmlModalEdit.iconPauseAlarm);
 

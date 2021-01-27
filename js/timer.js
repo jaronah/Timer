@@ -31,13 +31,6 @@ const timer = {
      */                 
     currentAlarm: '',
 
-    /**
-     * Alarm preview audio (used in the modal EDIT)
-     * 
-     * @type {HTMLAudioElement}
-     */
-    testAlarm: '',
-
     alarms: {
 
         iron: new Audio('./dist/audio/alarm_iron.mp3'),
@@ -121,16 +114,12 @@ const timer = {
         this.htmlModalMessage.closableArea = document.getElementById('closableAreaOfModalMessage');
         this.htmlModalMessage.btnSubmit = document.getElementById('btnSubmitMessage');
         
-        // alarm audios:
-        this.currentAlarm = this.alarms[this.htmlModalEdit.selectAlarm.selectedOptions[0].value];
-        this.testAlarm = this.alarms[this.htmlModalEdit.selectAlarm.selectedOptions[0].value];
-
     },
 
     setUserSettings: function () {
 
         this.renderCustomAlarms();
-        this.setCurrentAlarm();
+        this.setCurrentAlarmFromLocalStorage();
         this.setRepeatAlarm();
     
     },
@@ -143,11 +132,17 @@ const timer = {
     
     },
 
+    setCurrentAlarm: function () {
+        
+        this.currentAlarm = this.alarms[this.htmlModalEdit.selectAlarm.selectedOptions[0].value];
+
+    },
+
     /**
      * Selects an option of currently set alarm (stored in Local Storage)
      * for HTML Select element containing alarm options.
      */
-    setCurrentAlarm: function () {
+    setCurrentAlarmFromLocalStorage: function () {
     
         const currentAlarmName = localStorage.getItem('currentAlarmName');
     
@@ -165,7 +160,9 @@ const timer = {
             }
     
         }
-    
+
+        this.setCurrentAlarm();
+
     },
     
     /**
@@ -250,9 +247,19 @@ const timer = {
     resetModalEditTimer: function () {
     
         this.renderTimeoutForModal();
-        this.setCurrentAlarm();
+        this.setCurrentAlarmFromLocalStorage();
         this.setRepeatAlarm();
     
+    },
+
+    closeModalEditTimer: function () {
+        
+        if (this.currentAlarm instanceof Audio) {
+
+            this.currentAlarm.load();
+
+        }
+
     },
 
     /**
@@ -390,8 +397,6 @@ const timer = {
             } 
             
             if (currentTime === 0) {
-    
-                this.currentAlarm = this.alarms[this.htmlModalEdit.selectAlarm.selectedOptions[0].value];
     
                 /* Plays once an alarm.
                    Also intended for interval playing an alarm repeatedly,
