@@ -238,11 +238,7 @@ window.onload = function () {
 
     timer.htmlModalEdit.selectAlarm.onchange = () => {
         
-        if (!timer.currentAlarm.paused) {
-            
-            timer.currentAlarm.pause();
-
-        }
+        pauseAudio(timer.currentAlarm);
 
         timer.setCurrentAlarm(); // currentAlarm updated
         timer.currentAlarm.load();
