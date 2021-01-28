@@ -76,7 +76,7 @@ const timer = {
          * Variables for modal EDIT:
          * -------------------------
          */
-        this.htmlModalEdit = {},
+        this.htmlModalEdit = {};
         this.htmlModalEdit.container = document.getElementById('modalEditTimer');
         this.htmlModalEdit.closableArea = document.getElementById('closableAreaOfEditTimer');
 
@@ -109,7 +109,7 @@ const timer = {
          * Variables for modal MESSAGE:
          * -----------------------------
          */
-        this.htmlModalMessage = {},
+        this.htmlModalMessage = {};
         this.htmlModalMessage.container = document.getElementById('modalMessage');
         this.htmlModalMessage.closableArea = document.getElementById('closableAreaOfModalMessage');
         this.htmlModalMessage.btnSubmit = document.getElementById('btnSubmitMessage');
