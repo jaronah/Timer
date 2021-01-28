@@ -88,10 +88,8 @@ window.onload = function () {
      */
     timer.htmlModalEdit.btnCancel.onclick = () => {
 
-        openOrCloseModal(timer.htmlModalEdit.container);
-        pauseAudio(timer.currentAlarm);
         timer.htmlModalEdit.reset();
-        timer.closeModalEditTimer();
+        timer.htmlModalEdit.close();
 
     }
 
@@ -100,10 +98,8 @@ window.onload = function () {
      */
     timer.htmlModalEdit.btnStorno.onclick = () => {
         
-        openOrCloseModal(timer.htmlModalEdit.container);
-        pauseAudio(timer.currentAlarm);
         timer.htmlModalEdit.reset();
-        timer.closeModalEditTimer();
+        timer.htmlModalEdit.close();
 
     }
 
@@ -139,16 +135,13 @@ window.onload = function () {
         pauseAudio(timer.currentAlarm);
 
         timer.enableOrDisableControlButtons();
-        timer.closeModalEditTimer();
 
     }
 
     timer.htmlModalEdit.closableArea.onclick = () => {
 
-        openOrCloseModal(timer.htmlModalEdit.container);
-        pauseAudio(timer.currentAlarm);
         timer.htmlModalEdit.reset();
-        timer.closeModalEditTimer();
+        timer.htmlModalEdit.close();
 
     }
 

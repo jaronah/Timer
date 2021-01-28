@@ -115,6 +115,13 @@ const timer = {
         
         };
 
+        this.htmlModalEdit.close = function () {
+        
+            openOrCloseModal(timer.htmlModalEdit.container);
+            pauseAudio(timer.currentAlarm);
+
+        },
+
         /**
          * Variables for modal MESSAGE:
          * -----------------------------
@@ -249,10 +256,6 @@ const timer = {
     
         return timeoutStatus;
     
-    },
-
-    closeModalEditTimer: function () {
-        
     },
 
     /**
