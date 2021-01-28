@@ -38,15 +38,19 @@ window.onload = function () {
      */
     timer.htmlBtnStartOrPause.onclick = (ev) => {
         
-        timer.currentAlarm.load();
-
-        if (timer.htmlBtnStartOrPause.classList.contains('isPaused')) {
+        if (timer.htmlBtnStartOrPause.classList.contains('isPaused')) { // clicked on button START
 
             timer.htmlBtnStartOrPause.innerText = 'PAUSE';
             timer.htmlBtnEdit.disabled = true;
             timer.htmlBtnReset.disabled = true;
 
-        } else {
+            if (timer.currentAlarm.currentTime > 0) {
+                
+                timer.currentAlarm.load();
+                
+            }
+
+        } else { // clicked on button PAUSE
 
             timer.htmlBtnStartOrPause.innerText = 'START';
             timer.htmlBtnEdit.disabled = false;
