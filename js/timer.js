@@ -104,6 +104,16 @@ const timer = {
         
         this.htmlModalEdit.checkboxRepeatAlarm = document.getElementById('checkboxRepeatAlarm');
 
+        /**
+         * Resets currently set values in the modal EDIT. Sets stored values from Local Storage.
+         */
+        this.htmlModalEdit.reset = function () {
+        
+            timer.renderTimeoutForModal();
+            timer.setCurrentAlarmFromLocalStorage();
+            timer.setRepeatAlarm();
+        
+        };
 
         /**
          * Variables for modal MESSAGE:
@@ -238,17 +248,6 @@ const timer = {
         }
     
         return timeoutStatus;
-    
-    },
-
-    /**
-     * Resets currently set values in the modal EDIT. Sets stored values from Local Storage.
-     */
-    resetModalEditTimer: function () {
-    
-        this.renderTimeoutForModal();
-        this.setCurrentAlarmFromLocalStorage();
-        this.setRepeatAlarm();
     
     },
 

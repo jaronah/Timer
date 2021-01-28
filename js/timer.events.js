@@ -90,7 +90,7 @@ window.onload = function () {
 
         openOrCloseModal(timer.htmlModalEdit.container);
         pauseAudio(timer.currentAlarm);
-        timer.resetModalEditTimer();
+        timer.htmlModalEdit.reset();
         timer.closeModalEditTimer();
 
     }
@@ -102,7 +102,7 @@ window.onload = function () {
         
         openOrCloseModal(timer.htmlModalEdit.container);
         pauseAudio(timer.currentAlarm);
-        timer.resetModalEditTimer();
+        timer.htmlModalEdit.reset();
         timer.closeModalEditTimer();
 
     }
@@ -147,7 +147,7 @@ window.onload = function () {
 
         openOrCloseModal(timer.htmlModalEdit.container);
         pauseAudio(timer.currentAlarm);
-        timer.resetModalEditTimer();
+        timer.htmlModalEdit.reset();
         timer.closeModalEditTimer();
 
     }
