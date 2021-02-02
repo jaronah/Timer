@@ -465,16 +465,314 @@ const timer = {
     
     },
 
-    handleMessageModal: function () {
+    /**
+     * Starts or pauses countdown of timeout.
+     * 
+     * Switches text of the START/PAUSE button.
+     * Also enables or disables control buttons (Edit, Start/Pause, Reset)
+     * 
+     * @param {Event} ev 
+     */
+    startOrPause: function (ev) {
+      
+        if (timer.htmlBtnStartOrPause.classList.contains('isPaused')) { // clicked on button START
 
-        openOrCloseModal(this.htmlModalMessage.container);
-        
-        if (this.repeatAlarm) {
-            clearInterval(this.repeatAlarm);
+            timer.htmlBtnStartOrPause.innerText = 'PAUSE';
+            timer.htmlBtnEdit.disabled = true;
+            timer.htmlBtnReset.disabled = true;
+
+            if (timer.currentAlarm.currentTime > 0) {
+                
+                timer.currentAlarm.load();
+                
+            }
+
+        } else { // clicked on button PAUSE
+
+            timer.htmlBtnStartOrPause.innerText = 'START';
+            timer.htmlBtnEdit.disabled = false;
+            if (timer.getCurrentTime() != timer.getTimeout()) {
+                timer.htmlBtnReset.disabled = false;
+            }
+
         }
 
-        pauseAudio(this.currentAlarm);
+        timer.htmlBtnStartOrPause.classList.toggle('isPaused');
+
+
+        timer.countdown(ev);
+
+    },
+
+    /**
+     * Plays or pauses an alarm preview in the modal EDIT.
+     */
+    playOrPauseAlarmPreview: function () {
+
+        if (timer.htmlModalEdit.btnPlayOrPauseAlarm.getAttribute('status') === 'isPlaying') {
+
+            timer.currentAlarm.pause();
+
+        } else {
+
+            timer.currentAlarm.play();
+
+        }
+
+        timer.currentAlarm.onpause = () => {
+            
+            switchIconPauseToPlay(timer.htmlModalEdit.btnPlayOrPauseAlarm, timer.htmlModalEdit.iconPlayAlarm, timer.htmlModalEdit.iconPauseAlarm);
         
+        }
+
+        timer.currentAlarm.onplay = () => {
+        
+            switchIconPlayToPause(timer.htmlModalEdit.btnPlayOrPauseAlarm, timer.htmlModalEdit.iconPlayAlarm, timer.htmlModalEdit.iconPauseAlarm);
+
+        }
+
+    },
+
+    /**
+     * Resets timeout.
+     * 
+     * Also enables button Start/Pause and disables button Reset.
+     */
+    reset: function () {
+
+        timer.renderTimeout();
+
+        timer.htmlBtnStartOrPause.disabled = false;
+        if (timer.getCurrentTime() === timer.getTimeout()) {
+            
+            timer.htmlBtnReset.disabled = true;
+
+        }
+
+    },
+
+    /**
+     * Opens modal EDIT.
+     */
+    openModalEdit: function () {
+
+        openOrCloseModal(timer.htmlModalEdit.container);
+
+        if (timer.currentAlarm instanceof Audio) {
+
+            timer.currentAlarm.load();
+
+        }
+        
+    },
+
+    /**
+     * Closes modal EDIT and discards currently set settings (time, alarm, repeat alarm).
+     */
+    closeAndDiscardModalEdit: function () {
+
+        timer.htmlModalEdit.reset();
+        timer.htmlModalEdit.close();
+
+    },
+
+    /**
+     * Closes modal EDIT and saves currently set settings (time, alarm, repeat alarm).
+     */
+    closeAndSaveModalEdit: function () {
+        
+        let seconds = Number(timer.htmlModalEdit.seconds.value);
+        let minutes = Number(timer.htmlModalEdit.minutes.value);
+        let hours = Number(timer.htmlModalEdit.hours.value);
+        let timeInSeconds = 0;
+
+        timeInSeconds = seconds + (minutes * 60) + (hours * 60 * 60);
+
+        if (timeInSeconds > 0) {
+
+            timer.setTimeout();
+            timer.renderTimeout();
+
+            localStorage.setItem('currentAlarmName', timer.htmlModalEdit.selectAlarm.selectedOptions[0].value);
+            localStorage.setItem('repeatAlarm', timer.htmlModalEdit.checkboxRepeatAlarm.checked);
+            
+            openOrCloseModal(timer.htmlModalEdit.container);
+
+        } else {
+
+            timer.renderTimeoutForModal();
+            alert("Timeout could not be set. Only time more than 0.");
+            
+        }
+
+        pauseAudio(timer.currentAlarm);
+
+        timer.enableOrDisableControlButtons();
+
+    },
+
+    /**
+     * Closes modal MESSAGE.
+     */
+    closeModalMessage: function () {
+
+        openOrCloseModal(timer.htmlModalMessage.container);
+        
+        if (timer.repeatAlarm) {
+            clearInterval(timer.repeatAlarm);
+        }
+
+        pauseAudio(timer.currentAlarm);
+        
+    },
+
+    /**
+     * When selected a new alarm option from HTML Select with alarm names,
+     * it pauses a preview of an alarm audio if playing and sets currently selected alarm.
+     */
+    handleSelectedAlarm: function () {
+        
+        pauseAudio(timer.currentAlarm);
+
+        timer.setCurrentAlarm(); // currentAlarm updated
+        timer.currentAlarm.load();
+
+    },
+
+    /**
+     * Imports custom alarm audio encoded into base64.
+     * 
+     * Custom alarm audios are stored in the Local Storage of user's browser.
+     */
+    importCustomAlarm: function () {
+        
+        const fReader = new FileReader();
+        const file = timer.htmlModalEdit.btnBrowseAlarm.files[0];
+
+        if (file)
+            fReader.readAsDataURL(file);
+
+        fReader.onloadend = (event) => {
+
+            timer.customAlarms[clearFileSuffix(file.name)] = event.target.result;
+            localStorage.setItem('customAlarms', JSON.stringify(timer.customAlarms));
+
+            timer.renderCustomAlarms();
+            
+        }
+
+    },
+
+    /**
+     * Increments time unit (seconds or minutes or hours) inside HTML Element till reaching its limit.
+     * 
+     * @param {HTMLElement} htmlTimeInput containing seconds or minutes or hours
+     * @param {Number} limit
+     */
+    incrementTimeUnit: function (htmlTimeInput, limit) {
+        
+        if (htmlTimeInput.value < limit) {
+
+            htmlTimeInput.value++;
+            leadingZeros(htmlTimeInput);
+
+        }
+
+    },
+
+    /**
+     * Decrements time unit (seconds or minutes or hours) inside HTML Element till reaching its limit - 0.
+     *
+     * @param {HTMLElement} htmlTimeInput containing seconds or minutes or hours
+     */
+    decrementTimeUnit: function (htmlTimeInput) {
+        
+        if (htmlTimeInput.value > 0) {
+
+            htmlTimeInput.value--;
+            leadingZeros(htmlTimeInput);
+
+        }
+
+    },
+
+    incrementSeconds: function () {
+        
+        timer.incrementTimeUnit(timer.htmlModalEdit.seconds, timer.secondsMax);
+
+    },
+
+    incrementMinutes: function () {
+        
+        timer.incrementTimeUnit(timer.htmlModalEdit.minutes, timer.minutesMax);
+
+    },
+
+    incrementHours: function () {
+        
+        timer.incrementTimeUnit(timer.htmlModalEdit.hours, timer.hoursMax);
+
+    },
+
+    decrementSeconds: function () {
+        
+        timer.decrementTimeUnit(timer.htmlModalEdit.seconds);
+
+    },
+
+    decrementMinutes: function () {
+        
+        timer.decrementTimeUnit(timer.htmlModalEdit.minutes);
+
+    },
+
+    decrementHours: function () {
+        
+        timer.decrementTimeUnit(timer.htmlModalEdit.hours);
+
+    },
+
+    /**
+     * Controls valid time unit value and automatically corrects if limit exceeded.
+     * 
+     * @param {HTMLElement} htmlTimeInput 
+     * @param {Number} limit 
+     */
+    controlTimeUnit: function (htmlTimeInput, limit) {
+        
+        if (htmlTimeInput.value > limit) {
+
+            htmlTimeInput.value = limit;
+        
+        }
+
+    },
+
+    /**
+     * Controls valid seconds value and automatically corrects if limit exceeded.
+     */
+    controlSeconds: function () {
+        
+        timer.controlTimeUnit(timer.htmlModalEdit.seconds, timer.secondsMax);
+
+    },
+
+    /**
+     * Controls valid minutes value and automatically corrects if limit exceeded.
+     */
+    controlMinutes: function () {
+        
+        timer.controlTimeUnit(timer.htmlModalEdit.minutes, timer.minutesMax);
+
+    },
+
+    /**
+     * Controls valid hours value and automatically corrects if limit exceeded.
+     */
+    controlHours: function () {
+        
+        timer.controlTimeUnit(timer.htmlModalEdit.hours, timer.hoursMax);
+
     }
 
 };
