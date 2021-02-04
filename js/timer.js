@@ -18,6 +18,7 @@
  * event handlers are in:
  *   - js/timer.events.js
  * 
+ * Include this script after HTML DOM is loaded!
  */
 
 'use strict';
@@ -53,85 +54,75 @@ const timer = {
     minutesMax: 59,
     hoursMax: 99,
 
-    /**
-     * Sets HTML DOM properties and alarm audios.
-     * ------------------------------------------
-     */
-    set: function () {
+    
+    // Main page properties:
+    htmlTimerTime: document.getElementById('timerTime'),
+    htmlTimerSeconds: document.getElementById('timerSeconds'),
+    htmlTimerMinutes: document.getElementById('timerMinutes'),
+    htmlTimerHours: document.getElementById('timerHours'),
+    
+    htmlBtnEdit: document.getElementById('btnEdit'),
+    htmlBtnStartOrPause: document.getElementById('btnStartOrPause'),
+    htmlBtnReset: document.getElementById('btnReset'),
 
-        /**
-         * Variables for main page:
-         * ------------------------
-         */
-        this.htmlTimerTime = document.getElementById('timerTime');
-        this.htmlTimerSeconds = document.getElementById('timerSeconds');
-        this.htmlTimerMinutes = document.getElementById('timerMinutes');
-        this.htmlTimerHours = document.getElementById('timerHours');
+    // Modals:
+    htmlModalEdit: {
+
+        container: document.getElementById('modalEditTimer'),
+        closableArea: document.getElementById('closableAreaOfEditTimer'),
+
+        btnCancel: document.getElementById('btnCancelModalEditTimer'),
+        btnStorno: document.getElementById('btnStornoModalEditTimer'),
+        btnSave: document.getElementById('btnSaveModalEditTimer'),
         
-        this.htmlBtnEdit = document.getElementById('btnEdit');
-        this.htmlBtnStartOrPause = document.getElementById('btnStartOrPause');
-        this.htmlBtnReset = document.getElementById('btnReset');
+        btnSecondIncrement: document.getElementById('seconds-increment'),
+        btnSecondDecrement: document.getElementById('seconds-decrement'),
+        btnMinuteIncrement: document.getElementById('minutes-increment'),
+        btnMinuteDecrement: document.getElementById('minutes-decrement'),
+        btnHourIncrement: document.getElementById('hours-increment'),
+        btnHourDecrement: document.getElementById('hours-decrement'),
 
-        /**
-         * Variables for modal EDIT:
-         * -------------------------
-         */
-        this.htmlModalEdit = {};
-        this.htmlModalEdit.container = document.getElementById('modalEditTimer');
-        this.htmlModalEdit.closableArea = document.getElementById('closableAreaOfEditTimer');
+        seconds: document.getElementById('modalSeconds'),
+        minutes: document.getElementById('modalMinutes'),
+        hours: document.getElementById('modalHours'),
 
-        this.htmlModalEdit.btnCancel = document.getElementById('btnCancelModalEditTimer');
-        this.htmlModalEdit.btnStorno = document.getElementById('btnStornoModalEditTimer');
-        this.htmlModalEdit.btnSave = document.getElementById('btnSaveModalEditTimer');
-       
-        this.htmlModalEdit.btnSecondIncrement = document.getElementById('seconds-increment');
-        this.htmlModalEdit.btnSecondDecrement = document.getElementById('seconds-decrement');
-        this.htmlModalEdit.btnMinuteIncrement = document.getElementById('minutes-increment');
-        this.htmlModalEdit.btnMinuteDecrement = document.getElementById('minutes-decrement');
-        this.htmlModalEdit.btnHourIncrement = document.getElementById('hours-increment');
-        this.htmlModalEdit.btnHourDecrement = document.getElementById('hours-decrement');
+        selectAlarm: document.getElementById('modalSelectAlarm'),
+        btnPlayOrPauseAlarm: document.getElementById('btnPlayOrPauseAlarm'),
+        btnBrowseAlarm: document.getElementById('btnBrowseAlarm'),
 
-        this.htmlModalEdit.seconds = document.getElementById('modalSeconds');
-        this.htmlModalEdit.minutes = document.getElementById('modalMinutes');
-        this.htmlModalEdit.hours = document.getElementById('modalHours');
-
-        this.htmlModalEdit.selectAlarm = document.getElementById('modalSelectAlarm');
-        this.htmlModalEdit.btnPlayOrPauseAlarm = document.getElementById('btnPlayOrPauseAlarm');
-        this.htmlModalEdit.btnBrowseAlarm = document.getElementById('btnBrowseAlarm');
+        iconPlayAlarm: document.getElementById('iconPlayAlarm'),
+        iconPauseAlarm: document.getElementById('iconPauseAlarm'),
+                    
+        checkboxRepeatAlarm: document.getElementById('checkboxRepeatAlarm'),
         
-        this.htmlModalEdit.iconPlayAlarm = document.getElementById('iconPlayAlarm');
-        this.htmlModalEdit.iconPauseAlarm = document.getElementById('iconPauseAlarm');
-        
-        this.htmlModalEdit.checkboxRepeatAlarm = document.getElementById('checkboxRepeatAlarm');
-
         /**
          * Resets currently set values in the modal EDIT. Sets stored values from Local Storage.
          */
-        this.htmlModalEdit.reset = function () {
+        reset: function () {
         
             timer.renderTimeoutForModal();
             timer.setCurrentAlarmFromLocalStorage();
             timer.setRepeatAlarm();
         
-        };
+        },
 
-        this.htmlModalEdit.close = function () {
-        
+        close: function () {
+    
             openOrCloseModal(timer.htmlModalEdit.container);
             pauseAudio(timer.currentAlarm);
 
-        },
+        }
 
-        /**
-         * Variables for modal MESSAGE:
-         * -----------------------------
-         */
-        this.htmlModalMessage = {};
-        this.htmlModalMessage.container = document.getElementById('modalMessage');
-        this.htmlModalMessage.closableArea = document.getElementById('closableAreaOfModalMessage');
-        this.htmlModalMessage.btnSubmit = document.getElementById('btnSubmitMessage');
+    },
+
+    htmlModalMessage: {
+    
+        container: document.getElementById('modalMessage'),
+        closableArea: document.getElementById('closableAreaOfModalMessage'),
+        btnSubmit: document.getElementById('btnSubmitMessage'),
         
     },
+
 
     setUserSettings: function () {
 
