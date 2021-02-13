@@ -133,7 +133,7 @@ const clearMessage = (id) => {
  */
 const pauseAudio = (audio) => {
 
-    if (!audio.paused) {
+    if ((audio instanceof Audio) && !audio.paused) {
 
         audio.pause();
         

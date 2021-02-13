@@ -388,10 +388,14 @@ const timer = {
                 /* Plays once an alarm.
                    Also intended for interval playing an alarm repeatedly,
                    becouse interval plays first audio after elapsed interval duration */
-                this.currentAlarm.play();
+                if (this.currentAlarm instanceof Audio) {
+
+                    this.currentAlarm.play();
+
+                }
     
                 // plays an alarm repeatedly in intervals
-                if (this.htmlModalEdit.checkboxRepeatAlarm.checked) {
+                if ((this.currentAlarm instanceof Audio) && this.htmlModalEdit.checkboxRepeatAlarm.checked) {
     
                     this.repeatAlarm = setInterval(() => {
     
@@ -472,7 +476,7 @@ const timer = {
             timer.htmlBtnEdit.disabled = true;
             timer.htmlBtnReset.disabled = true;
 
-            if (timer.currentAlarm.currentTime > 0) {
+            if ((timer.currentAlarm instanceof Audio) && timer.currentAlarm.currentTime > 0) {
                 
                 timer.currentAlarm.load();
                 
@@ -500,25 +504,29 @@ const timer = {
      */
     playOrPauseAlarmPreview: function () {
 
-        if (timer.htmlModalEdit.btnPlayOrPauseAlarm.getAttribute('status') === 'isPlaying') {
+        if (timer.currentAlarm instanceof Audio) {
 
-            timer.currentAlarm.pause();
+            if (timer.htmlModalEdit.btnPlayOrPauseAlarm.getAttribute('status') === 'isPlaying') {
 
-        } else {
-
-            timer.currentAlarm.play();
-
-        }
-
-        timer.currentAlarm.onpause = () => {
+                timer.currentAlarm.pause();
+    
+            } else {
+    
+                timer.currentAlarm.play();
+    
+            }
+    
+            timer.currentAlarm.onpause = () => {
+                
+                switchIconPauseToPlay(timer.htmlModalEdit.btnPlayOrPauseAlarm, timer.htmlModalEdit.iconPlayAlarm, timer.htmlModalEdit.iconPauseAlarm);
             
-            switchIconPauseToPlay(timer.htmlModalEdit.btnPlayOrPauseAlarm, timer.htmlModalEdit.iconPlayAlarm, timer.htmlModalEdit.iconPauseAlarm);
-        
-        }
-
-        timer.currentAlarm.onplay = () => {
-        
-            switchIconPlayToPause(timer.htmlModalEdit.btnPlayOrPauseAlarm, timer.htmlModalEdit.iconPlayAlarm, timer.htmlModalEdit.iconPauseAlarm);
+            }
+    
+            timer.currentAlarm.onplay = () => {
+            
+                switchIconPlayToPause(timer.htmlModalEdit.btnPlayOrPauseAlarm, timer.htmlModalEdit.iconPlayAlarm, timer.htmlModalEdit.iconPauseAlarm);
+    
+            }
 
         }
 
@@ -626,7 +634,12 @@ const timer = {
         pauseAudio(timer.currentAlarm);
 
         timer.setCurrentAlarm(); // currentAlarm updated
-        timer.currentAlarm.load();
+
+        if (timer.currentAlarm instanceof Audio) {
+
+            timer.currentAlarm.load();
+            
+        }
 
     },
 
