@@ -656,14 +656,31 @@ const timer = {
         if (file)
             fReader.readAsDataURL(file);
 
-        fReader.onloadend = (event) => {
+        fReader.addEventListener('loadend', function (event) {
 
-            timer.customAlarms[clearFileSuffix(file.name)] = event.target.result;
-            localStorage.setItem('customAlarms', JSON.stringify(timer.customAlarms));
+            // file size limit set to 5MB
+            if (file.size <= 5242880 && file.type.includes('audio')) {
 
-            timer.renderCustomAlarms();
-            
-        }
+                timer.customAlarms[clearFileSuffix(file.name)] = event.target.result;
+                localStorage.setItem('customAlarms', JSON.stringify(timer.customAlarms));
+    
+                timer.renderCustomAlarms();
+
+            } else {
+                
+                if (!file.type.includes('audio')) {
+
+                    alert("Chosen file is not of type audio. Choose another file, please.");
+
+                } else if (file.size > 5242880) {
+
+                    alert("Chosen audio is over 5MB. Choose smaller, please.");
+
+                }
+                
+            }
+
+        });
 
     },
 
