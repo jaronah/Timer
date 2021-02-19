@@ -20,32 +20,42 @@
         <section class="timer">
 
             <div class="content">
-                <div class="timer-time">
-                    <span class="timer-time__hours">
+                <div class="timer-time" id="timerTime">
+                    <span class="timer-time__hours" id="timerHours">
                         00
                     </span>
                     <span class="timer-time__colon"> : </span>
-                    <span class="timer-time__minutes">
+                    <span class="timer-time__minutes" id="timerMinutes">
                         00
                     </span>
                     <span class="timer-time__colon"> : </span>
-                    <span class="timer-time__seconds">
+                    <span class="timer-time__seconds" id="timerSeconds">
                         00
                     </span>
                 </div>
         
                 <div class="btn-group">
-                    <button class="btn btn--round btn--edit" id="btn-edit">EDIT</button>
-                    <button class="btn btn--round btn--start-pause" id="btn-start-pause">START</button>
-                    <button class="btn btn--round btn--reset" id="btn-reset">RESET</button>
+                    <button class="btn btn--round btn--edit" id="btnEdit">EDIT</button>
+                    <button class="btn btn--round btn--start-pause isPaused" id="btnStartOrPause">START</button>
+                    <button class="btn btn--round btn--reset" id="btnReset">RESET</button>
                 </div>
     
-                <div class="modal-wrapper d-n">
+                <div class="modal-wrapper d-n" id="modalMessage" status='close'">
+                    <div class="modal">
+                        <span>Timeout has left.</span>
+                        <button class="btn" id="btnSubmitMessage">OK</button>
+                    </div>
+
+                    <div class="modal-closable-area" id="closableAreaOfModalMessage">
+                    </div>
+                </div>
+
+                <div class="modal-wrapper d-n" id="modalEditTimer" status="close">
                     <div class="modal modal--edit">
                     
                         <div class="row f-sb mb-2">
                             <strong class="modal__title">Edit timer</strong>
-                            <button class="btn btn--cancel">
+                            <button class="btn btn--cancel" id="btnCancelModalEditTimer">
                                 <svg class="icon" viewBox="0 0 4.2333 4.2333" xmlns="http://www.w3.org/2000/svg">
                                     <path transform="scale(.26458)" d="m1.7773 0-1.7773 1.7773 6.2227 6.2227-6.2227 6.2227 1.7773 1.7773 6.2227-6.2227 6.2227 6.2227 1.7773-1.7773-6.2227-6.2227 6.2227-6.2227-1.7773-1.7773-6.2227 6.2227-6.2227-6.2227z" fill="#d1af47" stroke-width="0"/>
                                 </svg>
@@ -58,9 +68,10 @@
                                 <button class="btn font-larger" id="hours-increment">+</button>
                                 <input type="number"
                                        name="hours"
-                                       class="modal__hours-edit font-larger"
+                                       class="modal__hours font-larger"
+                                       id="modalHours"
                                        min="0"
-                                       max="23"
+                                       max="99"
                                        value="00"
                                        onchange="leadingZeros(this)"
                                        onkeyup="leadingZeros(this)"
@@ -74,7 +85,8 @@
                                 <button class="btn font-larger" id="minutes-increment">+</button>
                                 <input type="number"
                                        name="minutes"
-                                       class="modal__minutes-edit font-larger"
+                                       class="modal__minutes font-larger"
+                                       id="modalMinutes"
                                        min="0"
                                        max="59"
                                        value="00"
@@ -90,7 +102,8 @@
                                 <button class="btn font-larger" id="seconds-increment">+</button>
                                 <input type="number"
                                        name="seconds"
-                                       class="modal__seconds-edit font-larger"
+                                       class="modal__seconds font-larger"
+                                       id="modalSeconds"
                                        min="0"
                                        max="59"
                                        value="00"
@@ -107,15 +120,15 @@
                         
                         <div class="modal--edit__sound">
                             <div class="row mb-0-5">
-                                <select name="sounds" id="select-sound">
-                                    <option value="Default Sound">Default Sound</option>
+                                <select name="sounds" id="modalSelectAlarm">
+                                    <option value="iron" selected>iron</option>
                                 </select>    
                     
-                                <button class="btn btn--play mr-0-5" id="btn-play-sound">
-                                    <svg class="icon" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" xmlns:cc="http://creativecommons.org/ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+                                <button class="btn btn--play mr-0-5" id="btnPlayOrPauseAlarm" status="">
+                                    <svg class="icon" id="iconPlayAlarm" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" xmlns:cc="http://creativecommons.org/ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
                                         <path d="m0 0 16 8-16 8z" fill="#d1af47" fill-rule="evenodd"/>
                                     </svg>
-                                    <svg class="icon d-n" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" xmlns:cc="http://creativecommons.org/ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+                                    <svg class="icon d-n" id="iconPauseAlarm" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" xmlns:cc="http://creativecommons.org/ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
                                         <g fill="#d1af47" stroke-width="0">
                                             <rect x="1" width="6" height="16" rx="0" ry="3"/>
                                             <rect x="9" width="6" height="16" rx="0" ry="3"/>
@@ -123,14 +136,12 @@
                                     </svg>
                                 </button>
     
-                                <button class="btn btn--file" id="btn-import-sound">
-                                    browse
-                                </button>
+                                <input type="file" class="btn btn--file" id="btnBrowseAlarm" accept="audio/*">
                             </div>
                             
                             <label class="checkbox">
                                 <span class="checkbox__input">
-                                    <input type="checkbox" name="checkbox" id="checkbox-repeat-sound">
+                                    <input type="checkbox" name="checkbox" id="checkboxRepeatAlarm">
                                     <span class="checkbox__control">
                                         <svg width="20px" height="20px" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
                                             <g transform="matrix(.5713 .5713 -.5713 .5713 8.0018 -3.1472)" fill="#d1af47" shape-rendering="auto">
@@ -143,7 +154,15 @@
                                 <span class="checkbox__label">Repeat sound</span>
                             </label>
                         </div>
-        
+                        
+                        <div class="row f-sb mt-2">
+                            <button class="btn" id="btnStornoModalEditTimer">Storno</button>
+                            <button class="btn" id="btnSaveModalEditTimer">Save</button>                           
+                        </div>
+
+                    </div>
+
+                    <div class="modal-closable-area" id="closableAreaOfEditTimer">
                     </div>
                 </div>
             </div>
@@ -152,7 +171,11 @@
 
     </main>
 
-    <script src="./js/functions.js"></script>
-    <script src="./js/btn_handler.js"></script>
+    <script src="js/prototypes.js"></script>
+    <script src="js/functions.js"></script>
+    <script src="js/timer.js"></script>
+    <script src="js/timer.events.js"></script>
+    <script src="js/main.js"></script>
+
 </body>
 </html>

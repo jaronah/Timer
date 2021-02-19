@@ -13,9 +13,9 @@ $breakpoint-btn-in-row: 400px;
     user-select: none;
     cursor: pointer;
 
-    &:hover {
-        background-color: $color-dark-3;
-    }
+    // &:hover {
+    //     background-color: $color-dark-3;
+    // }
 
     &:active {
         color: #fff;
@@ -50,6 +50,10 @@ $breakpoint-btn-in-row: 400px;
             color: $color-green-active;
             border-color: $color-green-active;
         }
+
+        &:disabled {
+            @extend %btn-disabled;
+        }
     }
 
     &--edit {
@@ -60,6 +64,10 @@ $breakpoint-btn-in-row: 400px;
             color: $color-orange-active;
             border-color: $color-orange-active;
         }
+
+        &:disabled {
+            @extend %btn-disabled;
+        }
     }
 
     &--reset {
@@ -69,6 +77,10 @@ $breakpoint-btn-in-row: 400px;
         &:active {
             color: $color-silver-active;
             border-color: $color-silver-active;
+        }
+
+        &:disabled {
+            @extend %btn-disabled;
         }
     }
 

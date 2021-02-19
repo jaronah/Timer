@@ -9,3 +9,9 @@
         padding-right: 1rem;
     }
 }
+
+%btn-disabled {
+    color: $color-dark-3;
+    border-color: $color-dark-3;
+    cursor: default;
+}
