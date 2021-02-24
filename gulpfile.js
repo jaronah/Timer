@@ -1,29 +1,31 @@
 'use strict';
 
-const gulp       = require('gulp'),
-      sass       = require('gulp-sass'),
-      rename     = require('gulp-rename'),
-      cssmin     = require('gulp-cssnano'),
-      concat     = require('gulp-concat'),
-      prefix     = require('gulp-autoprefixer'),      
+const gulp = require('gulp'),
+      sass = require('gulp-sass'),
+      rename = require('gulp-rename'),
+      cssmin = require('gulp-cssnano'),
+      concat = require('gulp-concat'),
+      prefix = require('gulp-autoprefixer'),
       sourcemaps = require('gulp-sourcemaps'),
-      plumber    = require('gulp-plumber'),      
-      notify     = require('gulp-notify'),      
-      del        = require('del')
+      plumber = require('gulp-plumber'),
+      notify = require('gulp-notify'),
+      del = require('del'),
+      minify = require('gulp-minify');
+
 
 
 const onError = (err) => {
-  notify.onError({
-    title:    "Gulp",
-    subtitle: "Failure!",
-    message:  "Error: <%= error.message %>",
-    sound:    "Basso"
-  })(err);
-  this.emit('end');
+    notify.onError({
+        title: "Gulp",
+        subtitle: "Failure!",
+        message: "Error: <%= error.message %>",
+        sound: "Basso"
+    })(err);
+    this.emit('end');
 };
 
 const sassOptions = {
-  outputStyle: 'expanded'
+    outputStyle: 'expanded'
 };
 
 /**
@@ -32,17 +34,17 @@ const sassOptions = {
  */
 
 gulp.task('styles', () => {
-  return gulp.src('./sass/_main.scss')
-    .pipe(plumber({errorHandler: onError}))
-    .pipe(sourcemaps.init())
-    .pipe(concat('styles.scss'))
-    .pipe(sass(sassOptions).on('error', sass.logError))
-    .pipe(prefix())
-    .pipe(rename('styles.css'))
-    .pipe(cssmin())
-    .pipe(rename({ suffix: '.min' }))
-    .pipe(sourcemaps.write())
-    .pipe(gulp.dest('./dist/css'))
+    return gulp.src('./sass/_main.scss')
+        .pipe(plumber({ errorHandler: onError }))
+        .pipe(sourcemaps.init())
+        .pipe(concat('styles.scss'))
+        .pipe(sass(sassOptions).on('error', sass.logError))
+        .pipe(prefix())
+        .pipe(rename('styles.css'))
+        .pipe(cssmin())
+        .pipe(rename({ suffix: '.min' }))
+        .pipe(sourcemaps.write())
+        .pipe(gulp.dest('./dist/css'))
 });
 
 gulp.task('clean', () => {
@@ -52,9 +54,21 @@ gulp.task('clean', () => {
 });
 
 gulp.task('watch', () => {
-    gulp.watch('./sass/**/*.scss', (done) => {
-        gulp.series(['clean', 'styles'])(done);
+    return gulp.watch(['./sass/**/*.scss', './js/*.js'], (done) => {
+        gulp.series(['clean', 'styles', 'compressJs'])(done);
     });
+});
+
+gulp.task('compressJs', function () {
+    return gulp.src('js/*.js')
+        .pipe(minify({
+            ext: {
+                min: '.min.js'
+            },
+            noSource: true,
+            preserveComments: 'some'
+        }))
+        .pipe(gulp.dest('./dist/js'))
 });
 
 /**
@@ -62,6 +76,6 @@ gulp.task('watch', () => {
  * ------------
  */
 
-gulp.task('default', gulp.series(['watch']));
+gulp.task('default', gulp.series('watch'));
 
-gulp.task('build', gulp.series(['clean', 'styles']));
+gulp.task('build', gulp.series(['clean', 'styles', 'compressJs']));
