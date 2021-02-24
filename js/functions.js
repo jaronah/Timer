@@ -143,7 +143,7 @@ const pauseAudio = (audio) => {
 
 /**
  * 
- * code by kubosho_, (c) Stack Exchange Inc
+ * @license kubosho_, (c) Stack Exchange Inc
  * licensed under CC BY-SA 3.0 - https://creativecommons.org/licenses/by-sa/3.0/
  * source: https://stackoverflow.com/a/33369954/14570657
  *  

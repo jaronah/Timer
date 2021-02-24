@@ -1,6 +1,6 @@
 /** 
  * 
- * code by Andy Mercer, (c) Stack Exchange Inc
+ * @license Andy Mercer, (c) Stack Exchange Inc
  * licensed under CC BY-SA 3.0 - https://creativecommons.org/licenses/by-sa/3.0/
  * source: https://stackoverflow.com/a/38225299/14570657
  * 
