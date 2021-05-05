@@ -40,10 +40,10 @@
                     <button class="btn btn--round btn--reset" id="btnReset">RESET</button>
                 </div>
     
-                <div class="modal-wrapper d-n" id="modalMessage" status='close'">
-                    <div class="modal">
-                        <span>Timeout has left.</span>
-                        <button class="btn" id="btnSubmitMessage">OK</button>
+                <div class="modal-wrapper d-n" id="modalMessage" status="close">
+                    <div class="modal modal--message">
+                        <strong class="modal__text">Timeout has left.</strong>
+                        <button class="btn btn--ok" id="btnSubmitMessage">OK</button>
                     </div>
 
                     <div class="modal-closable-area" id="closableAreaOfModalMessage">
@@ -65,10 +65,10 @@
                         <div class="modal--edit__timeset">
                             <div class="col mr-1-5">
                                 <span class="title title--small">hours</span>
-                                <button class="btn font-larger" id="hours-increment">+</button>
+                                <button class="btn btn--plus" id="hours-increment">+</button>
                                 <input type="number"
                                        name="hours"
-                                       class="modal__hours font-larger"
+                                       class="modal__hours"
                                        id="modalHours"
                                        min="0"
                                        max="99"
@@ -77,15 +77,15 @@
                                        onkeyup="leadingZeros(this)"
                                        onkeydown="leadingZeros(this)"
                                        onclick="leadingZeros(this)">
-                                <button class="btn font-larger" id="hours-decrement">-</button>
+                                <button class="btn btn--minus" id="hours-decrement">-</button>
                             </div>
         
                             <div class="col mr-1-5">
                                 <span class="title title--small">minutes</span>
-                                <button class="btn font-larger" id="minutes-increment">+</button>
+                                <button class="btn btn--plus" id="minutes-increment">+</button>
                                 <input type="number"
                                        name="minutes"
-                                       class="modal__minutes font-larger"
+                                       class="modal__minutes"
                                        id="modalMinutes"
                                        min="0"
                                        max="59"
@@ -94,15 +94,15 @@
                                        onkeyup="leadingZeros(this)"
                                        onkeydown="leadingZeros(this)"
                                        onclick="leadingZeros(this)">
-                                <button class="btn font-larger" id="minutes-decrement">-</button>
+                                <button class="btn btn--minus" id="minutes-decrement">-</button>
                             </div>
         
                             <div class="col">
                                 <span class="title title--small">seconds</span>
-                                <button class="btn font-larger" id="seconds-increment">+</button>
+                                <button class="btn btn--plus" id="seconds-increment">+</button>
                                 <input type="number"
                                        name="seconds"
-                                       class="modal__seconds font-larger"
+                                       class="modal__seconds"
                                        id="modalSeconds"
                                        min="0"
                                        max="59"
@@ -111,7 +111,7 @@
                                        onkeyup="leadingZeros(this)"
                                        onkeydown="leadingZeros(this)"
                                        onclick="leadingZeros(this)">
-                                <button class="btn font-larger" id="seconds-decrement">-</button>
+                                <button class="btn btn--minus" id="seconds-decrement">-</button>
                             </div>
                         </div>
         
@@ -119,24 +119,32 @@
                         <span class="title title--small">Sound</span>
                         
                         <div class="modal--edit__sound">
-                            <div class="row mb-0-5">
-                                <select name="sounds" id="modalSelectAlarm">
-                                    <option value="iron" selected>iron</option>
-                                </select>    
-                    
-                                <button class="btn btn--play mr-0-5" id="btnPlayOrPauseAlarm" status="">
-                                    <svg class="icon" id="iconPlayAlarm" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" xmlns:cc="http://creativecommons.org/ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
-                                        <path d="m0 0 16 8-16 8z" fill="#d1af47" fill-rule="evenodd"/>
-                                    </svg>
-                                    <svg class="icon d-n" id="iconPauseAlarm" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" xmlns:cc="http://creativecommons.org/ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
-                                        <g fill="#d1af47" stroke-width="0">
-                                            <rect x="1" width="6" height="16" rx="0" ry="3"/>
-                                            <rect x="9" width="6" height="16" rx="0" ry="3"/>
-                                        </g>
-                                    </svg>
-                                </button>
-    
-                                <input type="file" class="btn btn--file" id="btnBrowseAlarm" accept="audio/*">
+                            <div class="modal--edit__alarms mb-0-5">
+                                <div class="modal--edit__alarms-group">
+                                    <select name="sounds" class="select select--alarms" id="modalSelectAlarm">
+                                        <option value="iron" selected>iron</option>
+                                    </select>    
+                        
+                                    <button class="btn btn--play" id="btnPlayOrPauseAlarm" status="">
+                                        <svg class="icon" id="iconPlayAlarm" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" xmlns:cc="http://creativecommons.org/ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+                                            <path d="m0 0 16 8-16 8z" fill-rule="evenodd"/>
+                                        </svg>
+                                        <svg class="icon d-n" id="iconPauseAlarm" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" xmlns:cc="http://creativecommons.org/ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+                                            <g stroke-width="0">
+                                                <rect x="1" width="6" height="16" rx="0" ry="3"/>
+                                                <rect x="9" width="6" height="16" rx="0" ry="3"/>
+                                            </g>
+                                        </svg>
+                                    </button>
+                                </div>
+                                <div class="modal--edit__alarms-btn">
+                                    <button class="btn btn--file">
+                                        <input type="file" id="btnBrowseAlarm" accept="audio/*">
+                                        <label for="btnBrowseAlarm" class="btn--file__label">
+                                            Import Alarm
+                                        </label>
+                                    </button>
+                                </div>
                             </div>
                             
                             <label class="checkbox">
@@ -156,8 +164,8 @@
                         </div>
                         
                         <div class="row f-sb mt-2">
-                            <button class="btn" id="btnStornoModalEditTimer">Storno</button>
-                            <button class="btn" id="btnSaveModalEditTimer">Save</button>                           
+                            <button class="btn btn--storno" id="btnStornoModalEditTimer">Storno</button>
+                            <button class="btn btn--save" id="btnSaveModalEditTimer">Save</button>
                         </div>
 
                     </div>
