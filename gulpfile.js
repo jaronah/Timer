@@ -60,7 +60,7 @@ gulp.task('watch', () => {
 });
 
 gulp.task('compress-js', function () {
-    return gulp.src('js/*.js')
+    return gulp.src('src/js/*.js')
         .pipe(minify({
             ext: {
                 min: '.min.js'
