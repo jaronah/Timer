@@ -34,7 +34,7 @@ const sassOptions = {
  */
 
 gulp.task('styles', () => {
-    return gulp.src('./sass/_main.scss')
+    return gulp.src('src/sass/_main.scss')
         .pipe(plumber({ errorHandler: onError }))
         .pipe(sourcemaps.init())
         .pipe(concat('styles.scss'))
@@ -44,22 +44,22 @@ gulp.task('styles', () => {
         .pipe(cssmin())
         .pipe(rename({ suffix: '.min' }))
         .pipe(sourcemaps.write())
-        .pipe(gulp.dest('./dist/css'))
+        .pipe(gulp.dest('dist/css'))
 });
 
 gulp.task('clean', () => {
     return del([
-        './dist/css/*.css'
+        'dist/css/*.css'
     ]);
 });
 
 gulp.task('watch', () => {
-    return gulp.watch(['./sass/**/*.scss', './js/*.js'], (done) => {
-        gulp.series(['clean', 'styles', 'compressJs'])(done);
+    return gulp.watch(['src/sass/**/*.scss', 'src/js/*.js', 'src/img/**', 'src/fonts/**', 'src/audio/**'], (done) => {
+        gulp.series(['clean', 'styles', 'compress-js', 'copy-imgs', 'copy-fonts', 'copy-audio'])(done);
     });
 });
 
-gulp.task('compressJs', function () {
+gulp.task('compress-js', function () {
     return gulp.src('js/*.js')
         .pipe(minify({
             ext: {
@@ -68,7 +68,22 @@ gulp.task('compressJs', function () {
             noSource: true,
             preserveComments: 'some'
         }))
-        .pipe(gulp.dest('./dist/js'))
+        .pipe(gulp.dest('dist/js'))
+});
+
+gulp.task('copy-imgs', function () {
+    return gulp.src('src/img/**')
+        .pipe(gulp.dest('dist/img'));
+});
+
+gulp.task('copy-fonts', function () {
+    return gulp.src('src/fonts/**')
+        .pipe(gulp.dest('dist/fonts'));
+});
+
+gulp.task('copy-audio', function () {
+    return gulp.src('src/audio/**')
+        .pipe(gulp.dest('dist/audio'));
 });
 
 /**
@@ -78,4 +93,4 @@ gulp.task('compressJs', function () {
 
 gulp.task('default', gulp.series('watch'));
 
-gulp.task('build', gulp.series(['clean', 'styles', 'compressJs']));
+gulp.task('build', gulp.series(['clean', 'styles', 'compress-js', 'copy-imgs', 'copy-fonts', 'copy-audio']));
