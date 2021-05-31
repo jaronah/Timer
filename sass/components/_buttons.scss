@@ -4,23 +4,30 @@ $breakpoint-btn-in-row: 400px;
     display: flex;
     justify-content: center;
     align-items: center;
-    min-width: 2rem;
-    min-height: 1.8rem;
-    color: $color-light;
-    background-color: $color-dark-2;
-    border: 1px solid $color-silver;
+    min-height: $block-min-height;
+    color: $color-primary;
+    background-color: $color-btn-bg;
+    border: 1px solid $color-primary;
     outline: none;
     user-select: none;
     cursor: pointer;
+    box-sizing: border-box;
 
-    // &:hover {
-    //     background-color: $color-dark-3;
+    // &:not(.btn--round):not(.btn--cancel) {
+    //     background: linear-gradient(to top, $color-dark-2 20%, $color-btn-bg);
     // }
 
-    &:active {
-        color: #fff;
-        border-color: #fff;
-    }
+    // &:focus:not(.btn--round):not(.btn--cancel):not(.btn--save) {
+    //     color: $color-primary;
+    //     outline: 3px solid $color-primary;
+    //     box-shadow: 0 0 15px rgba($color-primary, 0.5);
+    //     z-index: 9999;
+    // }
+
+    // &:active:not(.btn--round):not(.btn--cancel):not(.btn--save) {
+    //     color: $color-primary-active !important;
+    //     outline: 3px solid $color-primary-active !important;
+    // }
 
     &--round {
         width: 5.3rem;
@@ -29,9 +36,18 @@ $breakpoint-btn-in-row: 400px;
         border: 3px solid;
         border-radius: 50%;
         outline: none;
-        color: $color-light;
-        background-color: transparent;
-        
+        // color: $color-primary;
+        background-color: $color-transparent;
+        transition-property: color, border-color;
+        transition-duration: $transition-duration;
+        transition-timing-function: ease-in;
+
+        &:hover {
+            transition-property: color, border-color;
+            transition-duration: $transition-duration;
+            transition-timing-function: ease-in;
+        }
+
         @media (min-width: $breakpoint-btn-in-row) {
             margin-bottom: 0;
         }
@@ -45,6 +61,10 @@ $breakpoint-btn-in-row: 400px;
     &--start-pause {
         color: $color-green;
         border-color: $color-green;
+
+        &:focus {
+            box-shadow: 0 0 15px $color-green-alpha;
+        }
 
         &:active {
             color: $color-green-active;
@@ -60,6 +80,11 @@ $breakpoint-btn-in-row: 400px;
         color: $color-orange;
         border-color: $color-orange;
 
+
+        &:focus {
+            box-shadow: 0 0 15px $color-orange-alpha;
+        }
+
         &:active {
             color: $color-orange-active;
             border-color: $color-orange-active;
@@ -74,6 +99,10 @@ $breakpoint-btn-in-row: 400px;
         color: $color-silver;
         border-color: $color-silver;
 
+        &:focus {
+            box-shadow: 0 0 15px $color-silver-alpha;
+        }
+
         &:active {
             color: $color-silver-active;
             border-color: $color-silver-active;
@@ -84,27 +113,125 @@ $breakpoint-btn-in-row: 400px;
         }
     }
 
+    &--plus,
+    &--minus {
+        font-size: $font-size-large;
+
+        @include style-btn($color-primary, $color-btn-bg, $color-primary-active, true);
+    }
+
     &--play {
         padding: 0.5rem;
+        
+        &[status='isPlaying'] {
+            @include style-btn($color-primary, $color-btn-bg, $color-primary-active, true);
+        }
 
-        svg path {
-            fill: $color-green;
+        &:not([status='isPlaying']) {
+            @include style-btn($color-green, $color-btn-bg, $color-green-active, true);
+        }
+
+        
+        svg path, svg rect {
+            fill: $color-primary;
+            transition-property: fill;
+            transition-duration: $transition-duration;
+        }
+
+        &:active {
+            svg path, svg rect {
+                fill: $color-primary-active;
+            }
+        }
+
+        &:focus:not([status='isPlaying']),
+        &:hover:not([status='isPlaying']) {
+            svg path, svg rect {
+                fill: $color-green;
+            }
+        }
+
+        &:active:not([status='isPlaying']) {
+            svg path, svg rect {
+                fill: $color-green-active;
+            }
         }
     }
 
     &--file {
+        width: 100%;
+        padding: 0;
+        position: relative;
+
+        @include style-btn($color-primary, $color-btn-bg, $color-primary-active);
+
+
+        &__label {
+            position: absolute;
+            z-index: 0;
+        }
+
+        input {
+            opacity: 0;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 0;
+            z-index: 123;
+            cursor: pointer;
+        }
+    }
+
+    &--ok,
+    &--save,
+    &--storno {
+        // padding-left: 3vw;
+        // padding-right: 3vw;
+        border: 3px solid;
+    }
+
+    &--ok {
+        @include style-btn($color-primary, $color-btn-bg, $color-primary-active);
+        // border: 2px solid $color-primary-active;
+
+        @media (min-width: 400px) {
+            min-width: 6.5rem;
+            margin: 0 auto;
+        }
+    }
+
+    &--storno,
+    &--save {
+        @include add-btn-standard-width;
+    }
+
+    &--storno {
+        @include style-btn($color-silver, $color-btn-bg, $color-silver-active);
+    }
+
+    &--save {
+        @include style-btn($color-green, $color-btn-bg, $color-green-active);
     }
 
     &--cancel {
-        background-color: transparent;
+        padding: 0;
+        background-color: $color-transparent;
         border: none;
         outline: none;
+        min-height: auto;
 
+        svg path {
+            transition: fill $transition-duration;
+        }
+
+        &:focus,
         &:hover {
-            background-color: transparent;
+            background-color: $color-transparent;
 
             svg path {
                 fill: $color-red;
+                transition: fill $transition-duration;
             }
         }
 

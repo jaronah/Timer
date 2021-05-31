@@ -1,13 +1,18 @@
 .modal {
     display: inline-flex;
     flex-direction: column;
-    max-width: 100%;
+    min-width: 100%;
     margin: auto;
     padding: 1.8rem;
     font-size: 1.3rem;
-    background-color: $color-primary;
+    background-color: $color-secondary;
+    border: 2px solid $color-primary;
     box-shadow: 0px 0px 20px 20px rgba(0, 0, 0, 0.1);
     z-index: 1;
+
+    @media (min-width: 400px) {
+        min-width: 25rem;
+    }
 
     &-wrapper {
         position: absolute;
@@ -24,8 +29,20 @@
         font-size: 2.25rem;
     }
 
+    &__text {
+        display: block;
+        margin-bottom: 2rem;
+    }
+
+    &__hours,
+    &__minutes,
+    &__seconds {
+        font-size: $font-size-large;
+    }
+
     &--edit {
-        border: 2px solid $color-orange;
+        width: 100%;
+        max-width: 43.75rem;
 
         &__timeset {
             display: flex;
@@ -37,6 +54,45 @@
                 width: 5.1rem;
             }
         }
+
+        &__alarms {
+            display: flex;
+            flex-wrap: wrap;
+
+            @media (min-width: 455px) {
+                flex-wrap: nowrap;
+            }
+
+            &-group {
+                display: flex;
+                width: 100%;
+                margin-bottom: 0.5rem;
+        
+                @media (min-width: 455px) {
+                    width: auto;
+                    margin-right: 0.5rem;
+                    margin-bottom: 0;
+                }
+
+                @media (min-width: 580px) {
+                    width: 57.5%;
+                }
+            }
+
+            &-btn {
+                width: 100%;
+
+                @media (min-width: 455px) {
+                    @include add-btn-standard-width();                
+                    // max-width: 11.625rem;
+                }
+            }
+        }
+    }
+
+    &--message {
+        color: $color-primary;
+        text-align: center;
     }
 
     &-closable-area {

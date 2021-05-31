@@ -9,23 +9,32 @@ $color-dark-3: #686868;
 $color-dark-4: #808080;
 $color-light: #eee;
 $color-green: #47d147;
+$color-green-alpha: rgba($color-green, 0.5);
 $color-green-active: #2bee2b;
 $color-orange: #d1af47;
+$color-orange-lighter: #dbc170; //#d6b85c;
+$color-orange-alpha: rgba($color-orange, 0.5);
 $color-orange-active: #eebd2b;
 $color-red: #d14747;
 $color-red-active: #ee2b2b;
 $color-silver: #879287;
+$color-silver-alpha: rgba($color-silver, 0.5);
 $color-silver-active: #afb6af;
+$color-transparent: transparent;
 
+$color-primary: $color-orange;
+$color-primary-active: $color-orange-active;
+$color-primary-lighter: $color-orange-lighter;
+$color-secondary: $color-dark-0; //hsl(44, 5%, 17%);
 
-$color-primary: $color-dark-0;
-$color-secondary: $color-orange;
+$color-btn-bg: $color-dark-1;
 
 /*
 HEIGHTS:
 --------
 */
 $header-height: 10rem;
+$block-min-height: 3.5rem;
 
 /*
 BREAKPOINTS:
@@ -35,3 +44,10 @@ $media-breakpoint-mobil: 320px;
 $media-breakpoint-tablet: 768px;
 $media-breakpoint-desktop: 992px;
 $media-breakpoint-large: 1200px;
+
+/*
+OTHER:
+------
+*/
+$transition-duration: 150ms;
+$font-size-large: 2.3rem; //1.85rem; //1.85rem * 1.3;

@@ -14,7 +14,7 @@
     display: inline-grid;
     grid-template-columns: min-content auto;
     grid-gap: 0.5em;
-    color: $color-orange;
+    color: $color-primary;
 
     &__input input:checked
     + &__control svg {
@@ -23,7 +23,7 @@
 
     &__input input:focus
     + &__control {
-        box-shadow: 0 0 0 0.05em $color-light, 0 0 0.3em 0 $color-orange;
+        @include focus-btn($color-primary);
     }
 
     &__input input:disabled
@@ -58,8 +58,7 @@
         width: 1em;
         height: 1em;
         padding: 0.05em;
-        border-radius: 0.25em;
-        border: 0.1em solid $color-orange;
+        border: 0.1em solid $color-primary;
         cursor: pointer;
 
         svg {

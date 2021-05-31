@@ -1,4 +1,8 @@
 body {
-    background-color: $color-primary;
-    color: $color-light;
+    background-color: $color-secondary;
+    color: $color-primary;
+}
+
+input, select {
+    background-color: $color-primary-lighter;
 }

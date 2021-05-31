@@ -1,0 +1,69 @@
+@mixin focus-btn($color, $focus-text: true) {
+    @if ($focus-text) {
+        color: $color;
+    }
+    border-color: $color;
+    outline: 3px solid $color;
+    box-shadow: 0 0 15px rgba($color, 0.3);
+    z-index: 9999;
+}
+
+@mixin style-btn($color-primary, $color-secondary, $color-active, $only-hover-effect: false) {
+    background-color: $color-secondary;
+    position: relative;
+
+    @if not ($only-hover-effect) {
+        color: $color-primary;
+        border-color: $color-primary;
+    }
+    
+
+    &__text {
+        display: block;
+        position: relative;
+        z-index: 2;
+    }
+
+    &::before {
+        content: '';
+        display: block;
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(to bottom, $color-transparent, $color-active 150%);
+        z-index: 1;
+        background-repeat: no-repeat;
+        background-position-y: $block-min-height;
+        transition: background $transition-duration;
+    }
+
+    &:hover::before {
+        background-position-y: $block-min-height / 3;
+        transition: background $transition-duration;
+    }
+
+    &:focus {
+        @include focus-btn($color-primary);
+    }
+
+    &:hover {
+        color: $color-primary;
+        border-color: $color-primary;
+        outline-color: $color-primary;
+    }
+
+    &:active {
+        color: $color-active;
+        border-color: $color-active;
+        outline: none;
+        box-shadow: none;
+        transition-property: box-shadow;
+        transition-duration: $transition-duration;
+        transition-timing-function: linear;
+    }
+}
+
+@mixin add-btn-standard-width() {
+    width: 30%;
+    min-width: 7rem;   
+}
